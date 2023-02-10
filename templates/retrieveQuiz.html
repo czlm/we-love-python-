@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}EG Admin - Edit Quizzes{% endblock %}
+{% block content %}
+<h1 class="display-4 text-center">Edit Quizzes</h1>
+<div>
+{% if count == 0 %}
+<p class="text-center">There are no quizzes.</p>
+{% elif count == 1 %}
+<p class="text-center">There is 1 quiz.</p>
+{% else %}
+<p class="text-center">There are {{ count }} quizzes.</p>
+{% endif %}
+</div>
+<center><a href="/createQuiz" class="btn btn-primary">Create New Quiz</a></center>
+<div class="container ">
+<table class="table">
+<thead>
+<tr>
+    <th></th>
+<th>Title</th>
+<th>Description</th>
+
+<th></th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+{% for quiz in quiz_list %}
+<tr>
+  <td>{{ quiz.get_quiz_id() }}</td>
+<td>{{ quiz.get_title() }}</td>
+<td>{{ quiz.get_description() }}</td>
+<td><a href="/updateQuiz/{{quiz.get_quiz_id()}}" class="btn btn-warning">Update</a></td>
+    <td><a href="/takeQuiz/{{quiz.get_quiz_id()}}" class="btn btn-primary">Take Quiz</a></td>
+
+<td><form action="{{url_for('delete_quiz', id=quiz.get_quiz_id())}}" method="POST">
+<input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{quiz.get_title()}}?');">
+</form>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

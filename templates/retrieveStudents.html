@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}EG Admin - Edit Students{% endblock %}
+{% block content %}
+<h1 class="display-4 text-center">Edit Students</h1>
+<div>
+{% if count == 0 %}
+<p class="text-center">There are no students.</p>
+{% elif count == 1 %}
+<p class='text-center'>There is 1 student.</p>
+{% else %}
+<p class="text-center">There are {{ count }} students.</p>
+{% endif %}
+</div>
+<center><a href="/createStudent" class="btn btn-primary align-items-center">New Student</a></center>
+<div class='container'>
+<table class="table ">
+<thead>
+<tr>
+    <th></th>
+<th>First Name</th>
+<th>Last Name</th>
+<th> Gender</th>
+  <th> Email</th>
+<th> Date Joined</th>
+<th> Address</th>
+
+<th></th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+{% for student in students_list %}
+<tr>
+  <td>{{ student.get_student_id() }}</td>
+<td>{{ student.get_first_name() }}</td>
+<td>{{ student.get_last_name() }}</td>
+<td>{{ student.get_gender() }}</td>
+    <td>{{ student.get_email() }}</td>
+  <td>{{ student.get_date_joined() }}</td>
+  <td>{{ student.get_address() }}</td>
+<td><a href="/updateStudent/{{student.get_student_id()}}" class="btn btn-warning">Update</a></td>
+<td><form action="{{url_for('delete_student', id=student.get_student_id())}}" method="POST">
+<input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{student.get_first_name()}}?');">
+</form>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+</div>
+<div class="container">
+<table class="table">
+<thead>
+<tr>
+    <th></th>
+<th>Subject ID</th>
+<th>Student ID</th>
+<th></th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+{% for subject_student in subject_student_list %}
+<tr>
+    <td>{{ subject_student.get_subject_student_id() }}</td>
+<td>{{ subject_student.get_subject_id() }}</td>
+<td>{{ subject_student.get_student_id() }}</td>
+<td><form action="{{url_for('delete_subject_student', id=subject_student.get_subject_student_id())}}" method="POST">
+<input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{subject_student.get_subject_student_id()}}?');">
+</form>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

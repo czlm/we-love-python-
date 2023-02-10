@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}EG Admin - Edit Subjects{% endblock %}
+{% block content %}
+<h1 class="display-4">Edit Subjects</h1>
+<div>
+{% if count == 0 %}
+<p>There are no subjects.</p>
+{% elif count == 1 %}
+<p>There is 1 Subject.</p>
+{% else %}
+<p>There are {{ count }} subjects.</p>
+{% endif %}
+</div>
+<a href="/createSubject" class="btn btn-primary">Create New Subject</a>
+<div class="container">
+<table class="table">
+<thead>
+<tr>
+    <th></th>
+<th>Title</th>
+<th>Description</th>
+    <th>Pricing (/month)</th>
+<th> Level ID</th>
+<th></th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+{% for subject in subjects_list %}
+<tr>
+<td>{{ subject.get_subject_id() }}</td>
+<td>{{ subject.get_title() }}</td>
+<td>{{ subject.get_description() }}</td>
+    <td>{{ subject.get_price() }}</td>
+    <td>{{ subject.get_level_id() }}</td>
+<td><a href="/updateSubject/{{subject.get_subject_id()}}" class="btn btn-warning">Update</a></td>
+<td><form action="{{url_for('delete_subject', id=subject.get_subject_id())}}" method="POST">
+<input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{subject.get_title()}}?');">
+</form>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

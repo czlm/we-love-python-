@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}EG Admin - Approve Withdrawals{% endblock %}
+{% block content %}
+<h1 class="display-4">Approve Withdrawals</h1>
+<div>
+{% if count == 0 %}
+<p>There are no applications.</p>
+{% elif count == 1 %}
+<p>There is 1 application.</p>
+{% else %}
+<p>There are {{ count }} applications.</p>
+{% endif %}
+</div>
+<div class="container">
+<table class="table table-striped">
+<thead>
+<tr>
+    <th></th>
+<th>First Name</th>
+<th>Last Name</th>
+<th> Level</th>
+<th>Subject</th>
+    <th>Reason</th>
+    <th>Feedback</th>
+    <th>Acknowledgement</th>
+    <th></th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+{% for withdrawal in withdrawal_list %}
+<tr>
+    <td>{{withdrawal.get_withdrawal_id() }}</td>
+<td>{{ withdrawal.get_first_name() }}</td>
+<td>{{ withdrawal.get_last_name() }}</td>
+<td>{{ withdrawal.get_level() }}</td>
+    <td>{{ withdrawal.get_subject() }}</td>
+    <td>{{ withdrawal.get_reason() }}</td>
+    <td>{{ withdrawal.get_feedback() }}</td>
+    <td>{{ withdrawal.get_ack() }}</td>
+<td><form action="{{url_for('delete_withdrawal', id=withdrawal.get_withdrawal_id())}}" method="POST"><input type="submit" value="Approve" class="btn btn-warning" onclick="return confirm('Are you sure you want to approve {{withdrawal.get_first_name()}}'s application?');"></form></td>
+<td><form action="{{url_for('delete_withdrawal', id=withdrawal.get_withdrawal_id())}}" method="POST">
+<input type="submit" value="Reject" class="btn btn-danger" onclick="return confirm('Are you sure you want to reject {{withdrawal.get_first_name()}}'s application?');">
+</form>
+</td>
+
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+</div>
+{% endblock %}

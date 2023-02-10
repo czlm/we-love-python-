@@ -1,0 +1,41 @@
+{% extends "basestud.html" %}
+{% block title %}Edugrow - Take Quiz{% endblock %}
+{% block content %}
+<h1 class="display-4">Edit Quizzes</h1>
+<div>
+{% if count == 0 %}
+<p>There are no quizzes.</p>
+{% elif count == 1 %}
+<p>There is 1 quiz.</p>
+{% else %}
+<p>There are {{ count }} quizzes.</p>
+{% endif %}
+</div>
+
+<div class="container ">
+<table class="table ">
+<thead>
+<tr>
+    <th></th>
+<th>Subject</th>
+<th>Description</th>
+
+<th></th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+{% for quiz in quiz_list %}
+<tr>
+  <td>{{ quiz.get_quiz_id() }}</td>
+<td>{{ quiz.get_title() }}</td>
+<td>{{ quiz.get_description() }}</td>
+
+    <td><a href="/takeQuiz/{{quiz.get_quiz_id()}}" class="btn btn-primary">Take Quiz</a></td>
+
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}
