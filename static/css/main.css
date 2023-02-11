@@ -1,0 +1,50 @@
+.head {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+#questions {
+    background: #947667;
+    border-radius: 30px;
+    color: white;
+    font-family: helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+}
+.container {
+    background: #F6F4F4;
+    border-radius: 20px;
+    width: 100%;
+    padding: 10px;
+}
+#text {
+  font-family: Verdana, sans-serif;
+  color: #947667;
+  font-size: 15px;
+  text-align: left;
+  padding: 30px 0px 40px 0px;
+}
+
+#text2 {
+  font-family: Verdana, sans-serif;
+  color: #947667;
+  font-size: 15px;
+  border-radius: 15px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.btn {
+  border: 1px solid #D9D9D8;
+  background: #D9D9D8;
+  color: #947667;
+  padding: 14px 28px;
+  font-size: 15px;
+  border-radius: 15px;
+}
+
+
