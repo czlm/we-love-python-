@@ -160,7 +160,7 @@
 
 <div class="row no gutters">
     <div class="col-4">
-        <div class="card" style="width: 400px; min-height: 558px; margin-top: 20px; margin-left: 67px; margin-right: 30px;">
+        <div class="card" style="width: 400px; min-height: 510px; margin-top: 20px; margin-left: 67px; margin-right: 30px;">
             <div class="card-body">
                 <h5 class="card-title">
                     Announcement
@@ -430,13 +430,13 @@
 
                                     <div id="Incompletes" class="container innercontainerS tab-pane fade">
                                         {% for user in users_list %}
+                                        {% if user.get_overall_ratings() | int <= 0 %}
                                         <div class="card"
                                              style="width: 345px; border-radius: 15px; margin-top: 0px; margin-bottom: 10px; margin-left: 0px; margin-right: 0px; padding: 0px; background-color: #f6f4f4; ">
-                                            <div class="card-body" style="padding: 10px 16px 10px 16px;>
+                                            <div class="card-body" style="padding: 0px 16px 10px 16px;">
                                                 <h5 class="card-title"> </h5>
                                                 <div class="card-text" style="padding: 0px; ">
                                                     <div id="grade_tableS">
-                                                        {% if user.get_overall_ratings() | int <= 0 %}
                                                         <div>
                                                             <div>
                                                                 {{ user.get_user_id() }}&nbsp;
@@ -444,21 +444,20 @@
                                                                 {{ user.get_last_name() }}
                                                                 <span class="align-top"
                                                                       style="float:right; font-size: 16px;">
-                                                                    <span class="fa fa-star unchecked"></span>
-                                                                    <span class="fa fa-star unchecked"></span>
-                                                                    <span class="fa fa-star unchecked"></span>
-                                                                    <span class="fa fa-star unchecked"></span>
-                                                                    <span class="fa fa-star unchecked"></span>
+                                                                    <span class="fa fa-star unchecked align-bottom"></span>
+                                                                    <span class="fa fa-star unchecked align-bottom "></span>
+                                                                    <span class="fa fa-star unchecked align-bottom"></span>
+                                                                    <span class="fa fa-star unchecked align-bottom"></span>
+                                                                    <span class="fa fa-star unchecked align-bottom"></span>
                                                                 </span>
                                                             </div>
                                                             <div>Level: {{ user.get_level() }}</div>
                                                         </div>
-                                                        {% endif %}
-
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        {% endif %}
                                         {% endfor %}
                                     </div>
 

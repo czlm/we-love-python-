@@ -1,5 +1,5 @@
 {% extends "Tbase.html" %}
-{% block title %}EG - Retrieve Grades{% endblock %}
+{% block title %}EG Admin - Manage Teachers{% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -63,59 +63,83 @@ table {
 }
 
 
+
+
 </style>
 {% endblock %}
 
 {% block content %}
+{% if 'teacher_created' in session %}
+<div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ session.pop('teacher_created', None) }} was created.
+</div>
+{% elif 'teacher_updated' in session %}
+<div class="alert alert-warning alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ session.pop('teacher_updated', None) }} was updated.
+</div>
+{% elif 'teacher_deleted' in session %}
+<div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ session.pop('teacher_deleted', None) }} was deleted.
+</div>
+{% endif %}
+
+
 <div class="head">
-    <h4 class="display-4" id="title">Retrieve Grades</h4>
+    <h4 class="display-4" id="title">Manage Teacher</h4>
 </div>
 <div class="container "
      style="max-width: 100%; max-height: 100%; margin: auto; ">
-
     <div>
         {% if count == 0 %}
-        <p>There are no grades.</p>
+        <p>There are no teachers.</p>
         {% elif count == 1 %}
-        <p>There is 1 grade.</p>
+        <p>There is 1 teacher.</p>
         {% else %}
-        <p>There are {{ count }} grades.</p>
+        <p>There are {{ count }} teachers.</p>
         {% endif %}
     </div>
     <div class="innercontainer">
         <table class="table table-hover">
             <thead id="text">
             <tr>
+                <th>ID</th>
                 <th>First Name</th>
                 <th>Last Name</th>
-                <th>Topic</th>
-                <th>Percentage</th>
-                <th>Grade</th>
+                <th>Gender</th>
+                <th>Email</th>
+                <th>Date Joined</th>
+                <th>Address</th>
+                <th>Subject</th>
             </tr>
             </thead>
             <tbody>
-            {% for grade in grades_list %}
-            <tr id="text2">
-                <td>{{ grade.get_first_name() }}</td>
-                <td>{{ grade.get_last_name() }}</td>
-                <td>Topic {{ grade.get_topic_no() }}) {{ grade.get_topic_title() }}</td>
-                <td>{{ grade.get_percentage() }}</td>
-                <td>{{ grade.get_grade() }}</td>
+            {% for teacher in teachers_list %}
+            <tr class="text2">
+                <td>{{ teacher.get_teacher_id() }}</td>
+                <td>{{ teacher.get_first_name() }}</td>
+                <td>{{ teacher.get_last_name() }}</td>
+                <td>{{ teacher.get_gender() }}</td>
+                <td>{{ teacher.get_email() }}</td>
+                <td>{{ teacher.get_date_joined() }}</td>
+                <td>{{ teacher.get_address() }}</td>
 
-                <td><a href="/updateGrade/{{grade.get_grade_id()}}" class="btn btn-warning">Update</a></td>
+                <td><a href="/updateTeacher/{{teacher.get_teacher_id()}}" class="btn btn-warning">Update</a></td>
                 <td>
-                    <form action="{{url_for('delete_grade', id=grade.get_grade_id())}}" method="POST">
+                    <form action="{{url_for('delete_teacher', id=teacher.get_teacher_id())}}" method="POST">
                         {# <input type="submit" value="Delete" class="btn btn-danger"
-                                  onclick="return confirm('Are you sure you want to delete
-                                  {{ grade.get_topic_no() }} {{ grade.get_topic_title() }} {{grade.get_percentage()}} {{grade.get_grade()}}?');">#}
+                                  onclick="return confirm('Are you sure you want to delete {{teacher.get_first_name()}} {{teacher.get_last_name()}}
+                              {{ teacher.get_gender() }} {{ teacher.get_email() }} {{ teacher.get_date_joined() }} {{ teacher.get_address() }} {{ teacher.get_subject() }}?');">#}
                         <!-- Button to Open the Modal -->
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#myModal_{{grade.get_grade_id()}}">
+                                data-bs-target="#myModal_{{teacher.get_teacher_id()}}">
                             Delete
                         </button>
 
                         <!-- The Modal -->
-                        <div class="modal" id="myModal_{{grade.get_grade_id()}}">
+                        <div class="modal" id="myModal_{{teacher.get_teacher_id()}}">
                             <div class="modal-dialog">
                                 <div class="modal-content">
 
@@ -127,7 +151,11 @@ table {
 
                                     <!-- Modal body -->
                                     <div class="modal-body">
-                                        Are you sure you want to delete {{ grade.get_topic_no() }} {{ grade.get_topic_title() }} {{grade.get_percentage()}} {{grade.get_grade()}}?
+                                        Are you sure you want to delete {{teacher.get_first_name()}}
+                                        {{teacher.get_last_name()}}
+                                        {{ teacher.get_gender() }} {{ teacher.get_email() }} {{
+                                        teacher.get_date_joined() }} {{ teacher.get_address() }} {{
+                                        teacher.get_subject() }}??
                                     </div>
 
                                     <!-- Modal footer -->
@@ -148,3 +176,6 @@ table {
     </div>
 </div>
 {% endblock %}
+
+
+

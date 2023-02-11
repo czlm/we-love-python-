@@ -1,6 +1,6 @@
-from wtforms import Form, StringField, RadioField, TextAreaField, SelectField, validators
-from wtforms import DecimalField, IntegerField, TimeField, SelectMultipleField, SubmitField
-from wtforms.fields import DateTimeField,  DateTimeLocalField
+from wtforms import Form, StringField, RadioField, EmailField, TextAreaField, SelectField, validators
+from wtforms import DecimalField, IntegerField, TimeField, SelectMultipleField, DateField, SubmitField
+from wtforms.fields import DateTimeField, DateTimeLocalField
 from wtforms.validators import DataRequired, ValidationError
 from flask_wtf import FlaskForm
 
@@ -46,6 +46,17 @@ class CreateContentForm(Form):
     title = StringField("Title of the topic", [validators.Length(min=1, max=150), validators.DataRequired()])
     content = TextAreaField('Enter descriptions for this topic', [validators.Length(min=1, max=1000), validators.DataRequired()])
 
+
+class CreateTeacherForm(Form):
+    first_name = StringField('First Name', [validators.length(min=1, max=150), validators.DataRequired()])
+    last_name = StringField('Last Name', [validators.length(min=1, max=150), validators.DataRequired()])
+    gender = SelectField('Gender',
+                         choices=[('', 'Select'), ('F', 'Female'), ('M', 'Male')],
+                         default='')
+    email = EmailField('Email address', [validators.DataRequired(), validators.Email()])
+    date_joined = DateField('Date Joined',  [validators.DataRequired()])
+    address = StringField('Address')
+    subject = SelectMultipleField('Choose your Subject(s)', [validators.DataRequired()], choices=[('E', 'English'), ('M', 'Math'), ('S', 'Science'), ('C', 'Chinese')], default='')
 
 
 

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from Forms import CreateUserForm, CreateGradeForm, CreateAnnouncementForm, CreateProgressreportForm,CreateQuizForm
-import shelve, User, Grade, Announcement, Progressreport
+from Forms import CreateUserForm, CreateGradeForm, CreateAnnouncementForm, CreateProgressreportForm, CreateTeacherForm, CreateQuizForm
+import shelve, User, Grade, Announcement, Progressreport, Teacher, Quiz
 from datetime import datetime
 
 from werkzeug.utils import secure_filename
@@ -269,14 +269,14 @@ def create_user():
 
         session['user_created'] = user.get_first_name() + ' ' + user.get_last_name()
 
-        return redirect(url_for('home'))
+        return redirect(url_for('studentHomePage'))
     return render_template('createUser2.html', form=create_user_form, subjects=subjects)
 
 
 @app.route('/retrieveUsers')
 def retrieve_users():
     users_dict = {}
-    db = shelve.open('user.db', 'r')
+    db = shelve.open('user.db', 'c')
     try:
         users_dict = db['Users']
     except:
@@ -402,7 +402,7 @@ def create_grade():
         # Close user_db
         user_db['Users'] = users_dict
         user_db.close()
-        return redirect(url_for('home'))
+        return redirect(url_for('teacherHomePage'))
     return render_template('createGrade.html', form=create_grade_form)
 
 
@@ -528,7 +528,7 @@ def create_announcement():
         # Close user_db
         user_db['Users'] = users_dict
         user_db.close()
-        return redirect(url_for('home'))
+        return redirect(url_for('studentHomePage'))
     return render_template('createAnnouncement.html', form=create_announcement_form)
 
 
@@ -656,7 +656,7 @@ def create_progressreport():
         # Close user_db
         user_db['Users'] = users_dict
         user_db.close()
-        return redirect(url_for('home'))
+        return redirect(url_for('teacherHomePage'))
     return render_template('createProgressreport.html', form=create_progressreport_form)
 
 
@@ -730,6 +730,111 @@ def delete_progressreport(id):
 
 
 
+@app.route('/createTeacher', methods=['GET', 'POST'])
+def create_teacher():
+    subjects = ['English', 'Math', 'Science', 'Chinese']
+    create_teacher_form = CreateTeacherForm(request.form)
+    if request.method == 'POST':
+        teachers_dict = {}
+        # print(request.form.getlist('mycheckbox')) #returns subjects in a python list
+        db = shelve.open('teacher.db', 'c')
+
+        try:
+            if 'Teachers' in db:
+                teachers_dict = db['Teachers']
+            else:
+                db['Teachers'] = teachers_dict
+        except:
+            print("Error in retrieving Teachers from teacher.db.")
+
+        teacher = Teacher.Teacher(create_teacher_form.first_name.data, create_teacher_form.last_name.data, create_teacher_form.gender.data, request.form.getlist('mycheckbox'),
+                         create_teacher_form.email.data, create_teacher_form.date_joined.data, create_teacher_form.address.data, create_teacher_form.subject.data)
+        teachers_dict[teacher.get_teacher_id()] = teacher
+
+        db['Teachers'] = teachers_dict
+
+        db.close()
+
+        session['teacher_created'] = teacher.get_first_name() + ' ' + teacher.get_last_name()
+
+        return redirect(url_for('teacherHomePage'))
+    return render_template('createTeacher.html', form=create_teacher_form, subjects=subjects)
+
+
+@app.route('/retrieveTeachers')
+def retrieve_teachers():
+    teachers_dict = {}
+    db = shelve.open('teacher.db', 'c')
+    try:
+        teachers_dict = db['Teachers']
+    except:
+        print("Error in retrieving Teachers from teacher.db.")
+    db.close()
+
+    teachers_list = []
+    for key in teachers_dict:
+        teacher = teachers_dict.get(key)
+        teachers_list.append(teacher)
+
+    return render_template('retrieveTeachers.html', count=len(teachers_list), teacherslist=teachers_list)
+
+
+@app.route('/updateTeacher/<int:id>/', methods=['GET', 'POST'])
+def update_teacher(id):
+    update_teacher_form = CreateTeacherForm(request.form)
+    if request.method == 'POST' and update_teacher_form.validate():
+        teachers_dict = {}
+        db = shelve.open('teacher.db', 'w')
+        teachers_dict = db['Teachers']
+
+        teacher = teachers_dict.get(id)
+        teacher.set_first_name(update_teacher_form.first_name.data)
+        teacher.set_last_name(update_teacher_form.last_name.data)
+        teacher.set_gender(update_teacher_form.gender.data)
+        teacher.set_email(update_teacher_form.email.data)
+        teacher.set_date_joined(update_teacher_form.date_joined.data)
+        teacher.set_address(update_teacher_form.address.data)
+        teacher.set_subject(update_teacher_form.subject.data)
+
+
+        db['Teachers'] = teachers_dict
+        db.close()
+
+        session['teacher_updated'] = teacher.get_first_name() + ' ' + teacher.get_last_name()
+
+        return redirect(url_for('retrieve_teachers'))
+    else:
+        teachers_dict = {}
+        db = shelve.open('teacher.db', 'r')
+        teachers_dict = db['Teachers']
+        db.close()
+
+        teacher = teachers_dict.get(id)
+        update_teacher_form.first_name.data = teacher.get_first_name()
+        update_teacher_form.last_name.data = teacher.get_last_name()
+        update_teacher_form.gender.data = teacher.get_gender()
+        update_teacher_form.email.data = teacher.get_email()
+        update_teacher_form.date_joined.data = teacher.get_date_joined()
+        update_teacher_form.address.data = teacher.get_address()
+        update_teacher_form.subject.data = teacher.get_subject()
+
+        return render_template('updateTeacher.html', form=update_teacher_form)
+
+
+@app.route('/deleteTeacher/<int:id>', methods=['POST'])
+def delete_teacher(id):
+    teachers_dict = {}
+
+    db = shelve.open('teacher.db', 'w')
+    teachers_dict = db['Teachers']
+    teachers_dict.pop(id)
+    db['Teachers'] = teachers_dict
+    db.close()
+    # session['teacher_deleted'] = teacher.get_first_name() + ' ' + teacher.get_last_name()
+
+    return redirect(url_for('retrieve_teachers'))
+
+
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
@@ -787,7 +892,7 @@ def create_quiz():
 
         db['Quizzes'] = quiz_dict
         db.close()
-        return redirect(url_for('home'))
+        return redirect(url_for('teacherHomePage'))
     return render_template('createQuiz.html', form=create_quiz_form)
 
 
