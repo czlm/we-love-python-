@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Edugrow - Create Payment{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+<h1 class="display-4 fs-1 text-center fw-bold " style="margin-top: 50px; color: #947667; font-family: helvetica, sans-serif; font-weight: bold ;font-size:30px; margin-bottom: 30px; text-align:center;">Order Details</h1>
+<div class="container">
+<form method="POST" class='row g-3' action="" style="padding-top: 20px">
+
+  <div class="form-group col-md-6 " id="text2">
+    {{ render_field(form.cardholder_name, class="form-control") }}
+  </div>
+  <div class="form-group col-md-6" id="text2">
+    {{ render_field(form.card_number, class="form-control") }}
+  </div>
+  <div class="form-group col-md-6" id="text2">
+    {{ render_field(form.date_of_expiry, class="form-control datepicker") }}
+  </div>
+
+  <form action="/pay" method="POST">
+  <script
+    src="https://checkout.stripe.com/checkout.js"
+    class="stripe-button"
+    data-key="pk_test_51MR7fsFGpAWUri8AtitqngNL1NIRRpVRp5dgnt8bZaLnpccGoNsD8Gw2LTltfdq6J0RTUPGtClSCkyaicl3hz0gJ00XuLrgywm"
+    data-name="Edugrow"
+    data-description="English Science"
+    data-amount="30000"
+    data-currency="sgd">
+  </script>
+</form>
+
+</form>
+</div>
+
+<style>
+  .container {
+    background: #F6F4F4;
+    border-radius: 20px;
+    width: 100%;
+    height: 410px;
+    padding: 20px;
+}
+
+#text2 {
+  font-family: Verdana, sans-serif;
+  color: #947667;
+  font-size: 15px;
+}
+
+.btn {
+  margin-top: 50px;
+  border: 1px solid #D9D9D8;
+  background: #D9D9D8;
+  color: #947667;
+  padding: 14px 28px;
+  font-size: 15px;
+  border-radius: 15px;
+  float: right;
+}
+</style>
+{% endblock %}

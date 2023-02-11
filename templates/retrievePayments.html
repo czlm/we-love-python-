@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}Edugrow - Retrieve_Payments{% endblock %}
+
+{% block content %}
+
+<div class="head"></div>
+<h1 class="display-4 text-center fw-bold" id="questions" >Outstanding Orders</h1></div>
+<div class="display-4 text-center" style="padding-bottom: 20px; color: #947667; font-family: helvetica, sans-serif; font-weight: bold ;font-size:30px; margin-bottom: 30px; text-align:center;">
+    {% if count == 0 %}
+    <p>There are no orders.</p>
+    {% elif count == 1 %}
+    <p>There is 1 order.</p>
+    {% else %}
+    <p>There are {{ count }} Orders.</p>
+    {% endif %}
+</div>
+<div class="container">
+    <table class="table    " style="border-radius 15px">
+        <thead>
+        <tr>
+            <th id="text">Payment ID</th>
+            <th id="text">First Name</th>
+            <th id="text">Last Name</th>
+            <th id="text">Sign up date</th>
+
+            <th></th>
+            <th></th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for payment in payments_list %}
+        <tr>
+            <td id="text2">{{ payment.get_payment_id() }}</td>
+            <td id="text2">{{ payment.get_cardholder_name() }}</td>
+            <td id="text2">{{ payment.get_card_number() }}</td>
+            <td id="text2">{{ payment.get_date_of_expiry() }}</td>
+
+
+
+            <td><a href="/updatePayment/{{payment.get_payment_id()}}" class="btn btn-warning">Update</a></td>
+            <td>
+                <form action="{{url_for('delete_payment', id=payment.get_payment_id())}}" method="POST">
+                    <!--<input type="submit" value="Delete" class="btn btn-danger">-->
+                    <!-- Button to Open the Modal -->
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal_{{payment.get_payment_id()}}">
+                        Delete
+                    </button>
+
+                    <!-- The Modal -->
+                    <div class="modal" id="myModal_{{payment.get_payment_id()}}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Delete Confirmation</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    Are you sure you want to delete {{payment.get_cardholder_name()}}?
+                                </div>
+
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <input type="submit" value="Delete" class="btn btn-danger">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+<style>
+    .head {
+
+    padding-bottom: 20px;
+}
+#questions {
+    background: #947667;
+    border-radius: 30px;
+    color: white;
+    font-family: helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+}
+.container {
+    background: #F6F4F4;
+    border-radius: 20px;
+    width: 100%;
+    padding: 10px;
+}
+#text {
+  font-family: Verdana, sans-serif;
+  color: #947667;
+  font-size: 15px;
+  text-align: left;
+  padding: 30px 0px 40px 0px;
+}
+
+#text2 {
+  font-family: Verdana, sans-serif;
+  color: #947667;
+  font-size: 15px;
+  border-radius: 15px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.btn {
+  border: 1px solid #D9D9D8;
+  background: #D9D9D8;
+  color: #947667;
+  padding: 14px 28px;
+  font-size: 15px;
+  border-radius: 15px;
+}
+</style>
+
+
+
+
+
+{% endblock %}
+
+
+

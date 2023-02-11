@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Edugrow- Update Payment{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+<h1 class="display-4 text-center fw-bold" style="margin-top: 50px; color: #947667; font-family: helvetica, sans-serif; font-weight: bold ;font-size:30px; margin-bottom: 30px; text-align:center;">Update Details</h1>
+<div class = "container">
+<form method="POST" class='row g-3' action="">
+    <div class="form-group col-md-6" id="text2">
+        {{ render_field(form.cardholder_name, class="form-control") }}
+    </div>
+    <div class="form-group col-md-6" id="text2">
+        {{ render_field(form.card_number, class="form-control") }}
+    </div>
+    <div class="form-group col-md-6" id="text2">
+        {{ render_field(form.date_of_expiry, class="form-control datepicker") }}
+    </div>
+    <div class="form-group">
+
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+</div>
+
+<style>
+.container {
+    background: #F6F4F4;
+    border-radius: 20px;
+    width: 100%;
+    padding: 10px;
+    height: 370px;
+}
+
+.btn {
+  margin-top: 50px;
+  border: 1px solid #D9D9D8;
+  background: #D9D9D8;
+  color: #947667;
+  padding: 14px 28px;
+  font-size: 15px;
+  border-radius: 15px;
+
+  position: fixed;
+  left: 47%;
+  text-align: center;
+  justify content: center;
+  display: flex;
+}
+
+#text2 {
+  font-family: Verdana, sans-serif;
+  color: #947667;
+  font-size: 15px;
+}
+</style>
+{% endblock %}
