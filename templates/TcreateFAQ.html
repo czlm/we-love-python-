@@ -1,0 +1,64 @@
+{% extends "Tbase.html" %}
+{% block title %}Create FAQ{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+<div class="head">
+    <h4 class="display-4" id="questions">Create FAQ</h4>
+</div>
+
+<div class="container">
+<form method="POST" action="">
+    <div id="text2">
+    <div class="form-group">{{ render_field(form.question, class="form-control") }}</div><br><br>
+    <div class="form-group">{{ render_field(form.answer, class="form-control") }}</div>
+    </div>
+    <input type="submit" value="Submit" class="btn btn-primary"/>
+</form>
+</div>
+
+<style>
+.head {
+    padding-top: 100px;
+    padding-bottom: 20px;
+}
+#questions {
+    background: #947667;
+    border-radius: 30px;
+    color: white;
+    font-family: helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 20px;
+    width: 150px;
+    text-align: center;
+}
+
+#text2 {
+  font-family: Verdana, sans-serif;
+  color: #947667;
+  font-size: 15px;
+}
+
+.btn {
+  margin-top: 50px;
+  border: 1px solid #D9D9D8;
+  background: #D9D9D8;
+  color: #947667;
+  padding: 14px 28px;
+  font-size: 15px;
+  border-radius: 15px;
+  float: right;
+}
+
+.container {
+    background: #F6F4F4;
+    border-radius: 20px;
+    width: 100%;
+    height: 350px;
+    padding: 10px;
+}
+
+</style>
+{% endblock %}

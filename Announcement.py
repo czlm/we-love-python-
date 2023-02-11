@@ -36,6 +36,8 @@ class Announcement:
         self.__created_datetime = created_datetime
 
 
+
+
     def get_announcement_id(self):
         return self.__announcement_id
 
@@ -62,3 +64,5 @@ class Announcement:
 
     def get_user_id(self):
         return self.__user_id
+
+

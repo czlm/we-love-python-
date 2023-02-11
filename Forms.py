@@ -13,7 +13,7 @@ class CreateUserForm(Form):
     announcement_descriptions = TextAreaField('Enter descriptions for announcement', [validators.Optional()])
     # announcement_descriptions = RadioField('Membership', choices=[('F', 'Fellow'), ('S', 'Senior'), ('P', 'Professional')], default='F')
     # grade = RadioField('Grade', choices=[(0, ''), (1, ''), (2, ''), (3, ''), (4, ''), (5, '')], default='0')
-    grade = IntegerField('Grade for this class', [validators.NumberRange(min=0, max=1, message='Key either 1, 2, 3, 4 only'), validators.DataRequired()])
+    grade = IntegerField('Grade for this class', [validators.NumberRange(max=0, message='Key either 1, 2, 3, 4 only'), validators.DataRequired()])
 
 
     overall_ratings = RadioField('Overall Ratings', choices=[(0, ''), (1, ''), (2, ''), (3, ''), (4, ''), (5, '')], default='0')
@@ -48,6 +48,7 @@ class CreateContentForm(Form):
 
 
 class CreateTeacherForm(Form):
+    salutation = RadioField('Salutation', choices=[('Dr', 'Dr'), ('Mr', 'Mr'), ('Mrs', 'Mrs'), ('Miss', 'Miss'), ('Ms', 'Ms')], default='Dr')
     first_name = StringField('First Name', [validators.length(min=1, max=150), validators.DataRequired()])
     last_name = StringField('Last Name', [validators.length(min=1, max=150), validators.DataRequired()])
     gender = SelectField('Gender',
@@ -57,6 +58,8 @@ class CreateTeacherForm(Form):
     date_joined = DateField('Date Joined',  [validators.DataRequired()])
     address = StringField('Address')
     subject = SelectMultipleField('Choose your Subject(s)', [validators.DataRequired()], choices=[('E', 'English'), ('M', 'Math'), ('S', 'Science'), ('C', 'Chinese')], default='')
+    # announcement_descriptions = RadioField('Membership', choices=[('F', 'Fellow'), ('S', 'Senior'), ('P', 'Professional')], default='F')
+    announcement_descriptions = TextAreaField('Enter descriptions for announcement', [validators.Optional()])
 
 
 

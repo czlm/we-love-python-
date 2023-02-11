@@ -79,13 +79,8 @@
                     <div class="card"
                          style="width: 360px; border-radius: 15px; margin-top: 10px; margin-bottom: 20px; margin-left: 0px; margin-right: 0px; background-color: #f6f4f4; ">
                         <div class="card-body" style="padding: 10px 16px 10px 16px; ">
-                            {% for user in users_list %}
-                            {% if user.get_grade() | int > 0 %}
-                                <td>{{ user.get_user_id() }} {{ user.get_announcement_descriptions() }}</td>
-                            {% endif %}
-                            {% endfor %}
                             <h5 class="card-title1" style="color: #ca9d8a;">
-                                    <div> <span id="card-titleS">Dear students,</span> </div>
+                                <div> <span id="card-titleS">Dear students,</span> </div>
                             </h5>
                             <p class="card-text" style="padding: 0px;">
                             <div id="card-text1">

@@ -1,8 +1,9 @@
 class Teacher:
     count_id = 0
 
-    def __init__(self, teacher_id, first_name, last_name, gender, email, date_joined, address, subject):
+    def __init__(self, teacher_id, salutation, first_name, last_name, gender, email, date_joined, address, subject):
         self.__teacher_id = teacher_id
+        self.__salutation = salutation
         self.__first_name = first_name
         self.__last_name = last_name
         self.__gender = gender
@@ -12,8 +13,12 @@ class Teacher:
         self.__subject = subject
 
 
+
     def get_teacher_id(self):
         return self.__teacher_id
+
+    def set_salutation(self, salutation):
+        self.__salutation = salutation
 
     def get_first_name(self):
         return self.__first_name
@@ -39,6 +44,9 @@ class Teacher:
 
     def set_teacher_id(self, teacher_id):
         self.__teacher_id = teacher_id
+
+    def get_salutation(self):
+        return self.__salutation
 
     def set_first_name(self, first_name):
         self.__first_name = first_name
