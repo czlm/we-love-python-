@@ -4,7 +4,7 @@
 {% from "includes/_formHelper.html" import render_field %}
 <h1 class="display-4">New Quiz</h1>
 <form method="POST" action="/createQuiz">
-
+<div class="container">
     <div class="form-group">
     {{ render_field(form.subject, class="form-control") }}
 </div>
@@ -55,5 +55,7 @@
     <div>
         <input type="submit" value="Save" class="btn btn-primary"/>
     </div>
+</div>
     </form>
+
     {% endblock %}
