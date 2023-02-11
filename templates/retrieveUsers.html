@@ -1,0 +1,174 @@
+{% extends "Tbase.html" %}
+{% block title %}Library Loan System - Retrieve Users{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- CSS -->
+<style type="text/css">
+.head {
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+#title {
+    background: #947667;
+    border-radius: 30px;
+    color: white;
+    font-family: helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+}
+
+.container {
+    width: 100%;
+    padding: 20px 60px 60px 60px;
+}
+
+.innercontainer {
+    background: #F6F4F4;
+    border-radius: 20px;
+    width: 100%;
+    padding: 10px;
+}
+
+#text {
+  font-family: Verdana, sans-serif;
+  color: #947667;
+  font-size: 15px;
+  text-align: left;
+  padding: 30px 0px 40px 0px;
+}
+
+#text2 {
+  font-family: Verdana, sans-serif;
+  color: #947667;
+  font-size: 15px;
+  border-radius: 15px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.btn {
+  border: 1px solid #D9D9D8;
+  background: #D9D9D8;
+  color: #947667;
+  padding: 14px 28px;
+  font-size: 15px;
+  border-radius: 15px;
+}
+
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+{% if 'user_created' in session %}
+<div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ session.pop('user_created', None) }} was created.
+</div>
+{% elif 'user_updated' in session %}
+<div class="alert alert-warning alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ session.pop('user_updated', None) }} was updated.
+</div>
+{% elif 'user_deleted' in session %}
+<div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ session.pop('user_deleted', None) }} was deleted.
+</div>
+{% endif %}
+
+<div class="head">
+    <h4 class="display-4" id="title">Retrieve Users</h4>
+</div>
+<div class="container "
+     style="max-width: 100%; max-height: 100%; margin: auto; ">
+    <div>
+        {% if count == 0 %}
+        <p>There are no users.</p>
+        {% elif count == 1 %}
+        <p>There is 1 user.</p>
+        {% else %}
+        <p>There are {{ count }} users.</p>
+        {% endif %}
+    </div>
+    <div class="innercontainer">
+        <table class="table table-hover">
+            <thead id="text">
+            <tr>
+                <th>User ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Level</th>
+                <th>Subject</th>
+                <th>Announcement</th>
+                <th>Grade</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users_list %}
+            <tr id="text2">
+                <td>{{ user.get_user_id() }}</td>
+                <td>{{ user.get_first_name() }}</td>
+                <td>{{ user.get_last_name() }}</td>
+                <td>{{ user.get_level() }}</td>
+                <td>{{ user.get_subject() }}</td>
+                <td>{{ user.get_announcement_descriptions() }}</td>
+                <td>{{ user.get_grade() }}</td>
+                <td>{{ user.get_overall_ratings() }}</td>
+
+                <td><a href="/updateUser/{{user.get_user_id()}}" class="btn btn-warning">Update</a></td>
+                <td>
+                    <form action="{{url_for('delete_user', id=user.get_user_id())}}" method="POST">
+                        {# <input type="submit" value="Delete" class="btn btn-danger"
+                                  onclick="return confirm('Are you sure you want to delete {{user.get_first_name()}} {{user.get_last_name()}} {{ user.get_level() }}
+                              {{ user.get_subject() }} {{ user.get_announcement_descriptions() }} {{ user.get_grade() }} {{ user.get_overall_ratings() }}?');">#}
+                        <!-- Button to Open the Modal -->
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#myModal_{{user.get_user_id()}}">
+                            Delete
+                        </button>
+
+                        <!-- The Modal -->
+                        <div class="modal" id="myModal_{{user.get_user_id()}}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Delete Confirmation</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        Are you sure you want to delete {{user.get_first_name()}}
+                                        {{user.get_last_name()}} {{ user.get_level() }}
+                                        {{ user.get_subject() }} {{ user.get_announcement_descriptions }} {{ user.get_grade() }} {{ user.get_overall_ratings() }}??
+                                    </div>
+
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <input type="submit" value="Delete" class="btn btn-danger">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

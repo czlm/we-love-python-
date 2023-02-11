@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Library Loan System - Create Customer{% endblock %}
+
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+<h1>upload PDF files</h1>
+<form method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    {{ form.file }}
+    <input type="submit">
+</form>
+{% endblock %}

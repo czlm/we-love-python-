@@ -1,0 +1,125 @@
+{% extends "Tbase.html" %}
+{% block title %}Library Loan System - Create Customer{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- CSS-->
+<style type=""></style>
+<style type="text/css">
+#contain {
+  color: #947261;
+  background-color: #f6f4f4;
+  border-radius: 30px;
+  font-family: helvetica, sans-serif;
+  font-weight: bold;
+  font-size:20px;
+}
+
+.head {
+    padding-top: 10px;
+}
+
+#title {
+    text-align: center;
+    margin: auto;
+    background: #947667;
+    border-radius: 30px;
+    color: gold;
+    font-family: helvetica, sans-serif;
+    font-weight: bold;
+    padding: 10px;
+    width: 650px;
+}
+
+#form_label{
+  color: black;
+  font-family: helvetica, sans-serif;
+  font-weight: bold;
+  font-size:20px;
+  border-radius: 0px;
+}
+
+
+.btn {
+<!--  background-color: #93d3c9;-->
+<!--  color: black;-->
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+
+<div class="row no gutters ">
+    <div class="col-8 border border-danger" id="contain" style="margin-top: 20px; margin-left: 260px; margin-right: 0px;">
+            <div class="head">
+                <h4 class="display-4" id="title">Update Grade</h4>
+            </div>
+            <form method="POST" action=""
+                  style="width: 900px; margin-top: 20px; margin-left: 100px; margin-right: 0px;">
+                <div class="row">
+                    <div class="col-10">
+                        <div class="form-group">
+                            <div class="">
+                                <!--                            {{ form.first_name.label(class="form-label my-other-class", style="color:red; ") }}-->
+                                {{ form.first_name(placeholder="First Name", style="color: black;") }}
+                                <!--                            {{ form.last_name.label(class="form-label my-other-class", style="color:red;") }}-->
+                                {{ form.last_name(placeholder="Last Name", style="color: black;") }}
+                            </div>
+                            <br>
+                        </div>
+
+
+                        <div class="form-group">
+                            {{ form.day.label(class="form-label radio-inline", style="color: #545454;") }}
+                            <br>
+                            <!--                    Making radio-line-->
+                            {% for subfield in form.day %}
+                            {{ subfield }}
+                            {{ subfield.label(style="color: #545454; font-weight: normal;") }}
+                            {% endfor %}
+                        </div>
+                        <br>
+
+                        <div class="form-group">
+                        <div class="">
+                            {{ form.start_time.label(class="form-label", style="color: #545454; padding-right: 20px;") }}
+                            {{ form.start_time(style="width: 33%;") }}
+                            {{ form.end_time.label(class="form-label", style="color: #545454; padding-left: 20px; padding-right: 20px;") }}
+                            {{ form.end_time(style="width: 33%;") }}
+                        </div>
+                        <br>
+
+                        <div class="form-group">
+                        <div class="">
+                            {{ form.topic_no.label(class="form-label", style="color: #545454; padding-right: 20px;") }}
+                            {{ form.topic_no(style="width: 33%;") }}
+                            {{ form.topic_title.label(class="form-label", style="color: #545454; padding-left: 20px; padding-right: 20px;") }}
+                            {{ form.topic_title(style="width: 33%;") }}
+                        </div>
+                        <br>
+
+
+                        <div class="form-group">
+                            {{ render_field(form.percentage, class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.grade, class="form-control") }}
+                        </div>
+
+
+                        <input type="submit" value="Submit" class="btn btn-success"/>
+                    </div>
+                </div>
+            </form>
+    </div>
+</div>
+{% endblock %}

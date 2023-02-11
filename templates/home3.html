@@ -1,0 +1,460 @@
+{% extends "Sbase.html" %}
+{% block title %}Library Loan System - Home{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- CSS -->
+<style type="text/css">
+.card {
+  background-color: #fff1bf;
+  border-radius: 25px;
+}
+
+.card-title{
+    font-weight: bold;
+    font-size: 25px;
+}
+
+#carda :not(.card-title) {
+    color: #c49d8a;
+}
+
+.card-title, th {
+    font-size: 25px;
+    color: #1a4789;
+}
+
+#grade_table tbody tr{
+  padding: 10px;
+}
+
+#grade_table tbody tr:hover{
+  background-color: #996247;
+}
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+<h2 style="padding-top: 90px;">Today, 2 February 2023</h2>
+<div class="row no gutters">
+    <div class="col-4">
+        <div class="card cell cell__big" style="width: 400px; margin-top: 20px; margin-left: 60px; margin-right: 20px;" id="carda">
+            <div class="card-body">
+                <h5 class="card-title">
+                    Announcements
+                </h5>
+                <div>
+                    {% for announcement in announcements_list %}
+                    <div class="card"
+                         style="width: 360px; border-radius: 15px; margin-top: 10px; margin-bottom: 20px; margin-left: 0px; margin-right: 0px; background-color: #f6f4f4; ">
+                        <div class="card-body" style="padding: 10px 16px 10px 16px; ">
+                            <h5 class="card-title">
+                                <div>
+                                    <div class="align-top">Dear {% if announcement.get_day() == "Mo" %}
+                                        <div>Monday</div>
+                                        {% elif announcement.get_day() == "Tu" %}
+                                        <div>Tuesday</div>
+                                        {% elif announcement.get_day() == "Wed" %}
+                                        <div>Wednesday</div>
+                                        {% elif announcement.get_day() == "Th" %}
+                                        <div>Thursday</div>
+                                        {% elif announcement.get_day() == "Fr" %}
+                                        <div>Friday</div>
+                                        {% elif announcement.get_day() == "Sa" %}
+                                        <div>Saturday</div>
+                                        {% elif announcement.get_day() == "Su" %}
+                                        <div>Sunday</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="align-top">{{ announcement.get_start_time()}} - {{
+                                        announcement.get_end_time()}}
+                                        students,
+                                    </div>
+                                </div>
+                            </h5>
+                            <p class="card-text" style="padding-bottom: 5px;">
+                            <div>
+                                <div class="align-top text-break">{{ announcement.get_announcement_descriptions() }}
+                                </div>
+                                <div class="align-top">{{ announcement.get_salutation()}}
+                                    {{announcement.get_tutor_full_name()}}
+                                </div>
+                                <div class="align-top lead">Posted on {{announcement.get_created_datetime()}}</div>
+                            </div>
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-8">
+        <div class="row no-gutters">
+            <div class="col-6">
+                <div class="card h-100" style="width: 495px; margin-top: 20px; margin-left: 25px; margin-right: 30px;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Grade Report
+                            <!-- Link trigger modal -->
+                            <a href="#" style="text-decoration: none; font-size: 14px; color: #737373; text-align-last: right;" data-bs-toggle="modal"
+                               data-bs-target="#staticBackdrop_g">Load me</a>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop_g" data-bs-backdrop="static"
+                                 data-bs-keyboard="false"
+                                 tabindex="-1" aria-labelledby="staticBackdrop_gLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                     style="max-width: 90%; max-height: 90%;">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdrop_gLabel">Grade Report</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table table-hover" id="grade_table">
+                                                <thead>
+                                                <tr>
+                                                    <th>Grade Item</th>
+                                                    <th>Percentage</th>
+                                                    <th>Grade</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for grade in grades_list %}
+                                                <tr style="background-color: #c49d8a;">
+                                                    {% if grade.get_day() == "Mo" %}
+                                                    <td>Monday</td>
+                                                    {% elif grade.get_day() == "Tu" %}
+                                                    <td>Tuesday</td>
+                                                    {% elif grade.get_day() == "Wed" %}
+                                                    <td>Wednesday</td>
+                                                    {% elif grade.get_day() == "Th" %}
+                                                    <td>Thursday</td>
+                                                    {% elif grade.get_day() == "Fr" %}
+                                                    <td>Friday</td>
+                                                    {% elif grade.get_day() == "Sa" %}
+                                                    <td>Saturday</td>
+                                                    {% elif grade.get_day() == "Su" %}
+                                                    <td>Sunday</td>
+                                                    {% endif %}
+                                                    <td>{{ grade.get_start_time() }} - {{ grade.get_end_time() }}
+                                                    </td>
+                                                    <td>{{ grade.get_percentage() }}</td>
+                                                    <td>{{ grade.get_grade() }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </h5>
+                        <div class="card-text">
+                            <canvas id="myBarChart" width="100%" height="42%"> </canvas>
+                            <button onclick="downloadPDF()">PDF Version</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="card h-100" style="width: 335px; margin-top: 20px; margin-left: 85px; margin-right: 8px;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Predicted score
+                        </h5>
+                        <div class="card-text " style="padding: 10px 10px 0px 10px;">
+                            <canvas id="myDoughnutChart" width="100%" height="70%"> </canvas>
+                            <h5 style="color: black; text-align: center; padding: 10px 0px 0px 0px;"> Very good! Keep up the good work and continue to push on :)</h5>
+<!--                            <button onclick="downloadPDF2()">PDF Version</button>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row no gutters">
+            <div class="col-12">
+                <div class="card h-100" style="width: 903px; margin-top: 50px; margin-left: 25px; margin-right: 60px;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Contents
+                        </h5>
+                        <div class="card-text">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+<!--For exporting to pdf using js-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js" integrity="sha512-t2JWqzirxOmR9MZKu+BMz0TNHe55G5BZ/tfTmXMlxpUY8tsTo3QMD27QGoYKZKFAraIPDhFv56HLdN11ctmiTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
+<script>
+let count = parseInt('{{ gradecount }}');
+    // setup
+    const data = {
+      labels: ["1", "2", "3", "4"],
+      datasets: [{
+        label: 'Weekly Sales',
+        data: ['{{ gradecount[0] }}',
+                '{{ gradecount[1] }}',
+                '{{ gradecount[2] }}',
+                '{{ gradecount[3] }}'],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 205, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)'
+        ],
+        borderColor: [
+          'rgb(255, 99, 132)',
+          'rgb(255, 159, 64)',
+          'rgb(255, 205, 86)',
+          'rgb(75, 192, 192)'
+        ],
+        borderWidth: 1
+      }]
+    };
+
+
+
+<!--    //noData plugin block-->
+<!--    const noData = {-->
+<!--    id: 'noData',-->
+<!--    afterDatasetsDraw: ((chart, args, plugins) => {-->
+<!--        const {-->
+<!--        ctx, data, chartArea:-->
+<!--        {top, bottom, left, right, width, height} }-->
+<!--        = chart;-->
+<!--        ctx.save();-->
+
+<!--&lt;!&ndash;No data so want to show not available&ndash;&gt;-->
+<!--        if(data.datasets.length === 0){-->
+<!--    &lt;!&ndash;    Grey color for rectangle&ndash;&gt;-->
+<!--            ctx.fillStyle = 'rgba(102, 102, 102, 0.5)';-->
+<!--    &lt;!&ndash;    Create rectangle covering the entire chart area&ndash;&gt;-->
+<!--            ctx.fillRect(left, top, width, height);-->
+
+<!--    &lt;!&ndash;    Text&ndash;&gt;-->
+<!--            ctx.font = 'bold 25px sans-serif';-->
+<!--            ctx.fillStyle = '#1a4789';-->
+<!--            ctx.textAlign = 'center';-->
+<!--            ctx.fillText('No Data Available', left + width /2, top + height/2)-->
+<!--        }-->
+<!--    })-->
+<!--  };-->
+
+
+    const bgColor = {
+        id: 'bgColor',
+        beforeDraw: (chart, steps, options) => {
+            const { ctx, width, height } = chart;
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, width, height)
+            ctx.restore();
+        }
+    }
+
+
+
+    // config
+    const config = {
+      type: 'bar',
+      data,
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      },
+      plugins: [bgColor]
+    };
+
+    // render init block
+    const myChart = new Chart(
+      document.getElementById('myBarChart'),
+      config
+    );
+
+        // DownloadPDF
+    function downloadPDF(){
+        const canvas = document.getElementById('myBarChart');
+
+        //create image
+        const canvasImage = canvas.toDataURL('image/jpeg', 1.0);
+        console.log(canvasImage)
+
+        //image must go to PDF (jsPDF() is an object)
+        let pdf = new jsPDF('landscape');
+        pdf.setFontSize(20);
+        pdf.addImage(canvasImage, 'JPEG', 15, 15, 280, 150);
+        pdf.text(15, 15, "Total Grades")
+<!--    Giving the pdf file a name-->
+        pdf.save('Grade.pdf');
+    }
+
+<!--Create a new custom chart type with features from Doughnut chart-->
+class circularChart extends Chart.DoughnutController {
+<!--draw everything based on 'DoughnutController'-->
+    draw(){
+        super.draw(arguments);
+        const {
+        ctx, data, chartArea:
+        {top, bottom, left, right, width, height} }
+        = this.chart;
+        ctx.save();
+        ctx.font= 'bold 30px san-serif';
+        ctx.fillStyle = '#6996b6';
+        ctx.textAlign = 'center';
+        ctx.fillText(data.datasets[0].text, width/2, bottom);
+    }
+}
+
+<!--'circularGauge' is the type-->
+circularChart.id = 'circularGauge';
+<!--Create a set of default specifically for this chart, having the DoughnutController as the default-->
+circularChart.defaults = Chart.DoughnutController.defaults;
+circularChart.defaults = {
+<!--thickness-->
+    cutout: '70%',
+<!--have a half circle-->
+    circumference: 180,
+<!--rotate the circle -->
+    rotation: 270
+};
+
+<!--This overrides the option-->
+circularChart.overrides = {
+<!--aspectRatio: 4  Width to length is 4 to 1-->
+    aspectRatio: 4,
+    plugins:{
+        legend:{
+            display: false
+        },
+        tooltips:{
+            enabled: false
+        }
+    }
+};
+</script>
+
+<script>
+<!--To load or register the chart. Registering circularChart-->
+Chart.register(circularChart);
+let score = parseInt('{{ predictedscorecount }}');
+    // setup
+    const data2 = {
+      labels: ['Predicted Score', 'Need to clear'],
+      datasets: [{
+        label: ' ',
+        data: ['{{ predictedscorecount }}',
+                '{{ predictedscorecountleft }}'],
+        backgroundColor: [
+          '#6996b6',
+          '#f4f4f4'
+        ],
+        borderColor: [
+          '#6996b6',
+          '#f4f4f4'
+        ],
+        borderWidth: 1,
+        text: '{{ predictedscorecount }}'
+      }]
+    };
+
+    const bgColor2 = {
+        id: 'bgColor2',
+        beforeDraw: (chart, steps, options) => {
+            const { ctx, width, height } = chart;
+            ctx.fillStyle = options.backgroundColor;
+            ctx.fillRect(0, 0, width, height)
+            ctx.restore();
+        }
+    }
+
+    // config
+    const config2 = {
+      type: 'circularGauge',
+      data2,
+      options: {
+      },
+      plugins: {
+        bgColor: {
+            backgroundColor: 'white'
+        }
+      }
+    };
+
+    // render init block
+    const myChart2 = new Chart(
+      document.getElementById('myDoughnutChart'),
+      config2
+    );
+</script>
+{% endblock %}
+
+
+
+<script>
+  let count = parseInt('{{ gradecount }}');
+  const ctx = document.getElementById('myBarChart');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ["1", "2", "3", "4"],
+      datasets: [{
+        label: ' ',
+        data: ['{{ gradecount[0] }}',
+                '{{ gradecount[1] }}',
+                '{{ gradecount[2] }}',
+                '{{ gradecount[3] }}'],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 205, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)'
+        ],
+        borderColor: [
+          'rgb(255, 99, 132)',
+          'rgb(255, 159, 64)',
+          'rgb(255, 205, 86)',
+          'rgb(75, 192, 192)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      plugins:{
+        legend: { display: false, },
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+
+
+
+
+
+
+

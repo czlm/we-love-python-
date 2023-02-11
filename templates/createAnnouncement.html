@@ -1,0 +1,193 @@
+{% extends "Tbase.html" %}
+{% block title %}Library Loan System - Create Customer{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- CSS-->
+<style type="text/css">
+#contain {
+  color: #947261;
+  background-color: #f6f4f4;
+  border-radius: 30px;
+  font-family: helvetica, sans-serif;
+  font-weight: bold;
+  font-size:20px;
+}
+
+.head {
+    padding-top: 10px;
+    float: centre;
+}
+
+#title {
+    margin: auto;
+    background: #947667;
+    border-radius: 30px;
+    color: gold;
+    font-family: helvetica, sans-serif;
+    font-weight: bold;
+    padding: 10px;
+    width: 650px;
+}
+
+#form_label{
+  color: black;
+  font-family: helvetica, sans-serif;
+  font-weight: bold;
+  font-size:20px;
+  border-radius: 0px;
+}
+
+.btn {
+<!--  background-color: #93d3c9;-->
+<!--  color: black;-->
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+
+<div class="row no gutters ">
+    <div class="col-8" id="contain"
+         style="margin-top: 20px; margin-left: 260px; margin-right: 0px;">
+        <div class="head">
+            <h4 class="display-4" id="title">Create Announcement</h4>
+        </div>
+        <form method="POST" action=""
+              style="width: 900px; margin-top: 20px; margin-left: 100px; margin-right: 0px;">
+            <div class="row">
+                <div class="col-10">
+
+                    <div class="form-group">
+                        <div class="">
+                            {{ form.announcement_descriptions.label(class="form-control", id="form_label",
+                            style="background-color: #8a97d9; text-align: center;") }}
+                            {{ form.announcement_descriptions(style="width: 100%; height: 100%;") }}
+                        </div>
+                        <br>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.salutation.label(class="form-label radio-inline", style="color: #545454;") }}
+                        <br>
+                        <!--                    Making radio-line-->
+                        {% for subfield in form.salutation %}
+                        {{ subfield }}
+                        {{ subfield.label(style="color: #545454; font-weight: normal;") }}
+                        {% endfor %}
+                    </div>
+                    <br>
+
+                    <div class="form-group">
+                        {{ form.tutor_full_name.label(class="form-label", style="color: #545454; padding-right: 10px;") }}
+                        {{ form.tutor_full_name(style="width: 22%;") }}
+                        {{ form.created_datetime.label(class="form-label", type="datetime-local", style="color: #545454; padding-left: 20px; padding-right: 10px;") }}
+                        {{ form.created_datetime(style="width: 22%;") }}
+                    </div>
+                    <br>
+
+                    <input type="submit" value="Submit" class="btn btn-success"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<script>
+$(document).ready(function() {
+    // The pattern of times that accepts moments between 09:00 to 17:59
+    var TIME_PATTERN = /^(09|1[0-7]{1}):[0-5]{1}[0-9]{1}$/;
+
+    $('#meetingForm').formValidation({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            startTime: {
+                verbose: false,
+                validators: {
+                    notEmpty: {
+                        message: 'The start time is required'
+                    },
+                    regexp: {
+                        regexp: TIME_PATTERN,
+                        message: 'The start time must be between 09:00 and 17:59'
+                    },
+                    callback: {
+                        message: 'The start time must be earlier then the end one',
+                        callback: function(value, validator, $field) {
+                            var endTime = validator.getFieldElements('endTime').val();
+                            if (endTime === '' || !TIME_PATTERN.test(endTime)) {
+                                return true;
+                            }
+                            var startHour    = parseInt(value.split(':')[0], 10),
+                                startMinutes = parseInt(value.split(':')[1], 10),
+                                endHour      = parseInt(endTime.split(':')[0], 10),
+                                endMinutes   = parseInt(endTime.split(':')[1], 10);
+
+                            if (startHour < endHour || (startHour == endHour && startMinutes < endMinutes)) {
+                                // The end time is also valid
+                                // So, we need to update its status
+                                validator.updateStatus('endTime', validator.STATUS_VALID, 'callback');
+                                return true;
+                            }
+
+                            return false;
+                        }
+                    }
+                }
+            },
+            endTime: {
+                verbose: false,
+                validators: {
+                    notEmpty: {
+                        message: 'The end time is required'
+                    },
+                    regexp: {
+                        regexp: TIME_PATTERN,
+                        message: 'The end time must be between 09:00 and 17:59'
+                    },
+                    callback: {
+                        message: 'The end time must be later then the start one',
+                        callback: function(value, validator, $field) {
+                            var startTime = validator.getFieldElements('startTime').val();
+                            if (startTime == '' || !TIME_PATTERN.test(startTime)) {
+                                return true;
+                            }
+                            var startHour    = parseInt(startTime.split(':')[0], 10),
+                                startMinutes = parseInt(startTime.split(':')[1], 10),
+                                endHour      = parseInt(value.split(':')[0], 10),
+                                endMinutes   = parseInt(value.split(':')[1], 10);
+
+                            if (endHour > startHour || (endHour == startHour && endMinutes > startMinutes)) {
+                                // The start time is also valid
+                                // So, we need to update its status
+                                validator.updateStatus('startTime', validator.STATUS_VALID, 'callback');
+                                return true;
+                            }
+
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
