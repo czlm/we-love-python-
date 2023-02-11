@@ -665,6 +665,79 @@ def retrieve_answers():
 
     return render_template('retrieveAnswers.html', count=len(answer_list), answer_list=answer_list)
 
+@app.route('/markAnswer/<int:id>', methods=['GET', 'POST'])
+def mark_answer(id):
+    answer_dict = {}
+    db = shelve.open('answer.db', 'r')
+    answer_dict = db['Answers']
+    db.close()
+
+    answer = answer_dict.get(id)
+    ans_list = []
+    ans_list.append(answer)
+
+    quiz_dict = {}
+    db = shelve.open('quiz.db', 'r')
+    quiz_dict = db['Quizzes']
+    db.close()
+
+    quiz = quiz_dict.get(id)
+    qn_list = []
+    qn_list.append(quiz)
+
+    create_score_form = CreateQuizForm(request.form)
+    if request.method == 'POST':  # and create_quiz_form.validate():
+        score_dict = {}
+        db = shelve.open('score.db', 'c')
+
+        try:
+            answer_dict = db['Scores']
+
+        except:
+            print("Error in retrieving scores from score.db")
+
+        import Score
+        score = Score.Score(1, 1, create_score_form.s1.data, create_score_form.s2.data, create_score_form.s3.data,
+                               create_score_form.s4.data, create_score_form.s5.data)
+        if len(score_dict) == 0:
+            score.set_score_id(1)
+        else:
+            score.set_score_id(max(score_dict.keys()) + 1)
+
+        score_dict[score.get_score_id()] = score
+
+        db['Scores'] = score_dict
+        db.close()
+        return redirect(url_for('home'))
+    return render_template('markAnswer.html', form=create_score_form, ans_list=ans_list, qn_list=qn_list)
+
+@app.route('/submitScore' , methods=['GET', 'POST'])
+def submit_score():
+    create_score_form = CreateQuizForm(request.form)
+    if request.method == 'POST':  # and create_quiz_form.validate():
+        score_dict = {}
+        db = shelve.open('score.db', 'c')
+
+        try:
+            answer_dict = db['Scores']
+
+        except:
+            print("Error in retrieving scores from score.db")
+
+        import Score
+        score = Score.Score(1, 1, create_score_form.s1.data, create_score_form.s2.data, create_score_form.s3.data,
+                            create_score_form.s4.data, create_score_form.s5.data)
+        if len(score_dict) == 0:
+            score.set_score_id(1)
+        else:
+            score.set_score_id(max(score_dict.keys()) + 1)
+
+        score_dict[score.get_score_id()] = score
+
+        db['Scores'] = score_dict
+        db.close()
+        return redirect(url_for('home'))
+    return render_template('markAnswer.html', form=create_score_form)
 
 
 if __name__ == '__main__':
