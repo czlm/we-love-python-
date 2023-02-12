@@ -1047,7 +1047,7 @@ def mark_answer(id):
 
         db['Scores'] = score_dict
         db.close()
-        return redirect(url_for('home'))
+        return redirect(url_for('teacherHomePage'))
     return render_template('markAnswer.html', form=create_score_form, ans_list=ans_list, qn_list=qn_list)
 
 @app.route('/submitScore' , methods=['GET', 'POST'])
@@ -1075,7 +1075,7 @@ def submit_score():
 
         db['Scores'] = score_dict
         db.close()
-        return redirect(url_for('home'))
+        return redirect(url_for('teacherHomePage'))
     return render_template('markAnswer.html', form=create_score_form)
 
 
