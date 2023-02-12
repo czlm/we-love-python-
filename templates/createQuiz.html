@@ -5,25 +5,13 @@
 {% block head %}
 {{ super() }}
 <!-- CSS -->
-<style type="text/css">
-body{
-    font-family: Verdana, sans-serif;
-    color: #947667;
-    padding-top:10px;
-    align-items:center;
-    justify-content:center;
-    height:auto;
-    margin:0px;
-    padding:0px;
+<style>
 
-
-}
     .container {
     background: #F6F4F4;
     border-radius: 20px;
     width: 100%;
     padding: 20px;
-    margin-top: 20px;
 }
 th {
   font-family: Verdana, sans-serif;
@@ -52,6 +40,7 @@ table {
   font-size: 15px;
   border-radius: 15px;
 }
+
 
 </style>
 {% endblock %}
@@ -103,7 +92,6 @@ table {
         <div class="form-group">
             {{ render_field(form.q5, class="form-control") }}
         </div>
-
 
         <div class="form-group">
             {{ render_field(form.ms5, class="form-control") }}

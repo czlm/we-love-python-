@@ -45,6 +45,14 @@ def science_page():
     return render_template('science.html')
 
 
+@app.route('/teacherPortal')
+def teacher_home_page():
+    return render_template('teacherPortal.html')
+
+
+@app.route('/studentPortal')
+def student_home_page():
+    return render_template('studentPortal.html')
 
 @app.route('/studentHomePage')
 def studentHomePage():
@@ -291,7 +299,8 @@ def create_user():
         except:
             print("Error in retrieving Users from user.db.")
 
-        user = User.User(create_user_form.first_name.data, create_user_form.last_name.data, create_user_form.level.data, request.form.getlist('mycheckbox'),
+        user = User.User(create_user_form.first_name.data, create_user_form.last_name.data, create_user_form.gender.data, create_user_form.email.data,
+                         create_user_form.date_joined.data, create_user_form.address.data, create_user_form.level.data, request.form.getlist('mycheckbox'),
                          create_user_form.announcement_descriptions.data, create_user_form.grade.data, create_user_form.overall_ratings.data)
         users_dict[user.get_user_id()] = user
 
@@ -334,6 +343,10 @@ def update_user(id):
         user = users_dict.get(id)
         user.set_first_name(update_user_form.first_name.data)
         user.set_last_name(update_user_form.last_name.data)
+        user.set_gender(update_user_form.gender.data)
+        user.set_email(update_user_form.email.data)
+        user.set_date_joined(update_user_form.date_joined.data)
+        user.set_address(update_user_form.address.data)
         user.set_level(update_user_form.level.data)
         user.set_subject(update_user_form.subject.data)
         user.set_announcement_descriptions(update_user_form.announcement_descriptions.data)
@@ -355,6 +368,10 @@ def update_user(id):
         user = users_dict.get(id)
         update_user_form.first_name.data = user.get_first_name()
         update_user_form.last_name.data = user.get_last_name()
+        update_user_form.gender.data = user.get_gender()
+        update_user_form.email.data = user.get_email()
+        update_user_form.date_joined.data = user.get_date_joined()
+        update_user_form.address.data = user.get_address()
         update_user_form.level.data = user.get_level()
         update_user_form.subject.data = user.get_subject()
         update_user_form.announcement_descriptions.data = user.get_announcement_descriptions()
@@ -761,22 +778,26 @@ def delete_progressreport(id):
 
 
 
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileField
 
-class UploadForm(FlaskForm):
-    file = FileField()
 
-@app.route('/upload', methods=['GET', 'POST'])
-def upload():
-    form = UploadForm()
 
-    if form.validate_on_submit():
-        filename = secure_filename(form.file.data.filename)
-        form.file.data.save('uploads/' + filename)
-        return redirect(url_for('upload'))
 
-    return render_template('upload1.html', form=form)
+# from flask_wtf import FlaskForm
+# from flask_wtf.file import FileField
+
+# class UploadForm(FlaskForm):
+#     file = FileField()
+#
+# @app.route('/upload', methods=['GET', 'POST'])
+# def upload():
+#     form = UploadForm()
+#
+#     if form.validate_on_submit():
+#         filename = secure_filename(form.file.data.filename)
+#         form.file.data.save('uploads/' + filename)
+#         return redirect(url_for('upload'))
+#
+#     return render_template('upload1.html', form=form)
 
 
 
@@ -1331,6 +1352,157 @@ def delete_subject(id):
 
 
 
+@app.route('/createStudent', methods=['GET', 'POST'])
+def create_student():
+    create_student_form = CreateStudentForm(request.form)
+    if request.method == 'POST' and create_student_form.validate():
+        student_dict = {}
+        db = shelve.open('student.db', 'c')
+
+        try:
+            student_dict = db['Students']
+
+        except:
+            print('Error retrieving Students from student.db')
+        student = Student.Student(create_student_form.first_name.data, create_student_form.last_name.data,
+                                  create_student_form.gender.data, 1, create_student_form.email.data,
+                                  create_student_form.date_joined.data, create_student_form.address.data,
+                                  create_student_form.level.data, create_student_form.subject1.data,
+                                  create_student_form.subject2.data, create_student_form.subject3.data,
+                                  create_student_form.subject4.data)
+        if len(student_dict) != 0 and student.get_student_id() <= int(list(student_dict.keys())[-1]):
+            student.set_student_id(int(list(student_dict.keys())[-1]) + 1)
+            student_dict[student.get_student_id()] = student
+        else:
+            student_dict[student.get_student_id()] = student
+
+        db['Students'] = student_dict
+        db.close()
+
+        subject_student_dict = {}
+        db = shelve.open('subject_student.db', 'c')
+
+        try:
+            subject_student_dict = db['SubjectStudents']
+        except:
+            print('Error retrieving SubjectStudents from subject_student.db')
+
+
+        subject_student = SubjectStudent.SubjectStudent(1, student.get_student_id(), int(create_student_form.subject1.data))
+        if len(subject_student_dict) != 0 and subject_student.get_subject_student_id() <= int(
+                list(subject_student_dict.keys())[-1]):
+            subject_student.set_subject_student_id((int(list(subject_student_dict.keys())[-1]) + 1))
+            subject_student_dict[subject_student.get_subject_student_id()] = subject_student
+        else:
+            subject_student_dict[subject_student.get_subject_student_id()] = subject_student
+
+        if create_student_form.subject2.data != 'N':
+            subject_student = SubjectStudent.SubjectStudent(1, student.get_student_id(),
+                                                        int(create_student_form.subject2.data))
+            if len(subject_student_dict) != 0 and subject_student.get_subject_student_id() <= int(list(subject_student_dict.keys())[-1]):
+                subject_student.set_subject_student_id((int(list(subject_student_dict.keys())[-1]) + 1))
+                subject_student_dict[subject_student.get_subject_student_id()] = subject_student
+            else:
+                subject_student_dict[subject_student.get_subject_student_id()] = subject_student
+
+        if create_student_form.subject3.data != 'N':
+            subject_student = SubjectStudent.SubjectStudent(1, student.get_student_id(),
+                                                        int(create_student_form.subject3.data))
+            if len(subject_student_dict) != 0 and subject_student.get_subject_student_id() <= int(list(subject_student_dict.keys())[-1]):
+                subject_student.set_subject_student_id((int(list(subject_student_dict.keys())[-1]) + 1))
+                subject_student_dict[subject_student.get_subject_student_id()] = subject_student
+            else:
+                subject_student_dict[subject_student.get_subject_student_id()] = subject_student
+
+        if create_student_form.subject4.data != 'N':
+            subject_student = SubjectStudent.SubjectStudent(1, student.get_student_id(),
+                                                        int(create_student_form.subject2.data))
+            if len(subject_student_dict) != 0 and subject_student.get_subject_student_id() <= int(list(subject_student_dict.keys())[-1]):
+                subject_student.set_subject_student_id((int(list(subject_student_dict.keys())[-1]) + 1))
+                subject_student_dict[subject_student.get_subject_student_id()] = subject_student
+            else:
+                subject_student_dict[subject_student.get_subject_student_id()] = subject_student
+
+        db['SubjectStudents'] = subject_student_dict
+        db.close()
+
+        return redirect(url_for('home'))
+    return render_template('createStudent.html', form=create_student_form)
+
+@app.route('/retrieveStudents')
+def retrieve_students():
+    student_dict = {}
+    db = shelve.open('student.db', 'r')
+    student_dict = db['Students']
+    db.close()
+
+    subject_student_dict = {}
+    db = shelve.open('subject_student.db', 'r')
+    subject_student_dict = db['SubjectStudents']
+    db.close()
+
+    students_list = []
+    for key in student_dict:
+        student = student_dict.get(key)
+        students_list.append(student)
+
+    # Convert the subject-student dictionary into a list
+    subject_student_list = []
+    for key in subject_student_dict:
+        ss = subject_student_dict.get(key)
+        subject_student_list.append(ss)
+
+    return render_template('retrieveStudents.html', student_count=len(students_list), students_list=students_list,
+                           subject_student_count=len(subject_student_list), subject_student_list=subject_student_list)
+
+
+@app.route('/updateStudent/<int:id>/', methods=['GET', 'POST'])
+def update_students(id):
+    update_student_form = CreateStudentForm(request.form)
+    if request.method == 'POST' and update_student_form.validate():
+        student_dict = {}
+        db = shelve.open('student.db', 'w')
+        student_dict = db['Students']
+
+        student = student_dict.get(id)
+        student.set_first_name(update_student_form.first_name.data)
+        student.set_last_name(update_student_form.last_name.data)
+        student.set_gender(update_student_form.gender.data)
+        student.set_email(update_student_form.email.data)
+        student.set_date_joined(update_student_form.date_joined.data)
+        student.set_address(update_student_form.address.data)
+
+        db['Students'] = student_dict
+        db.close()
+        return redirect(url_for('retrieve_students'))
+    else:
+        student_dict = {}
+        db = shelve.open('student.db', 'r')
+        student_dict = db['Students']
+        db.close()
+
+        student = student_dict.get(id)
+        student.set_first_name(update_student_form.first_name.data)
+        student.set_last_name(update_student_form.last_name.data)
+        student.set_gender(update_student_form.level.data)
+        student.set_email(update_student_form.email.data)
+        student.set_date_joined(update_student_form.date_joined.data)
+        student.set_address(update_student_form.address.data)
+
+        return render_template('updateStudents.html', form=update_student_form)
+
+@app.route('/deleteStudent/<int:id>', methods=['POST'])
+def delete_student(id):
+    student_dict = {}
+    db = shelve.open('student.db', 'w')
+    student_dict = db['Subjects']
+    student_dict.pop(id)
+    db['Students'] = student_dict
+    db.close()
+
+    return redirect(url_for('retrieve_students'))
+
+
 @app.route('/createTeacher', methods=['GET', 'POST'])
 def create_teacher():
     create_teacher_form = CreateStudentForm(request.form)
@@ -1372,7 +1544,7 @@ def create_teacher():
 
         if create_teacher_form.subject2.data != 'N':
             subject_teacher = SubjectTeacher.SubjectTeacher(1, teacher.get_teacher_id(),
-                                                            int(create_teacher_form.subject2.data))
+                                                            (create_teacher_form.subject2.data))
             if len(subject_teacher_dict) != 0 and subject_teacher.get_subject_teacher_id() <= int(
                     list(subject_teacher_dict.keys())[-1]):
                 subject_teacher.set_subject_teacher_id((int(list(subject_teacher_dict.keys())[-1]) + 1))
@@ -1382,7 +1554,7 @@ def create_teacher():
 
         if create_teacher_form.subject3.data != 'N':
             subject_teacher = SubjectTeacher.SubjectTeacher(1, teacher.get_teacher_id(),
-                                                            int(create_teacher_form.subject3.data))
+                                                            (create_teacher_form.subject3.data))
             if len(subject_teacher_dict) != 0 and subject_teacher.get_subject_teacher_id() <= int(
                     list(subject_teacher_dict.keys())[-1]):
                 subject_teacher.set_subject_teacher_id((int(list(subject_teacher_dict.keys())[-1]) + 1))
@@ -1468,7 +1640,6 @@ def delete_teacher(id):
 
 
 @app.route('/createWithdrawal', methods=['GET', 'POST'])
-
 def create_withdrawal():
     create_withdrawal_form = CreateWithdrawalForm(request.form)
     if request.method == 'POST' and create_withdrawal_form.validate():

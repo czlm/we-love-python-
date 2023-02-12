@@ -112,8 +112,6 @@ table {
                 <th>Address</th>
                 <th>Level</th>
                 <th>Subject</th>
-                <th>Announcement</th>
-                <th>Grade</th>
             </tr>
             </thead>
             <tbody>
@@ -122,18 +120,20 @@ table {
                 <td>{{ user.get_user_id() }}</td>
                 <td>{{ user.get_first_name() }}</td>
                 <td>{{ user.get_last_name() }}</td>
+                <td>{{ user.get_gender() }}</td>
+                <td>{{ user.get_email() }}</td>
+                <td>{{ user.get_date_joined() }}</td>
+                <td>{{ user.get_address() }}</td>
                 <td>{{ user.get_level() }}</td>
                 <td>{{ user.get_subject() }}</td>
-                <td>{{ user.get_announcement_descriptions() }}</td>
-                <td>{{ user.get_grade() }}</td>
-                <td>{{ user.get_overall_ratings() }}</td>
+
 
                 <td><a href="/updateUser/{{user.get_user_id()}}" class="btn btn-warning">Update</a></td>
                 <td>
                     <form action="{{url_for('delete_user', id=user.get_user_id())}}" method="POST">
                         {# <input type="submit" value="Delete" class="btn btn-danger"
-                                  onclick="return confirm('Are you sure you want to delete {{user.get_first_name()}} {{user.get_last_name()}} {{ user.get_level() }}
-                              {{ user.get_subject() }} {{ user.get_announcement_descriptions() }} {{ user.get_grade() }} {{ user.get_overall_ratings() }}?');">#}
+                                  onclick="return confirm('Are you sure you want to delete {{user.get_first_name()}} {{user.get_last_name()}} {{ user.get_gender() }}
+                                  {{ user.get_email() }} {{ user.get_date_joined() }} {{ user.get_address() }}{{ user.get_level() }} {{ user.get_subject() }}?');">#}
                         <!-- Button to Open the Modal -->
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                 data-bs-target="#myModal_{{user.get_user_id()}}">
@@ -153,9 +153,8 @@ table {
 
                                     <!-- Modal body -->
                                     <div class="modal-body">
-                                        Are you sure you want to delete {{user.get_first_name()}}
-                                        {{user.get_last_name()}} {{ user.get_level() }}
-                                        {{ user.get_subject() }} {{ user.get_announcement_descriptions }} {{ user.get_grade() }} {{ user.get_overall_ratings() }}??
+                                        Are you sure you want to delete {{user.get_first_name()}} {{user.get_last_name()}} {{ user.get_gender() }}
+                                  {{ user.get_email() }} {{ user.get_date_joined() }} {{ user.get_address() }}{{ user.get_level() }} {{ user.get_subject() }} ??
                                     </div>
 
                                     <!-- Modal footer -->

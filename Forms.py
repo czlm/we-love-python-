@@ -3,12 +3,20 @@ from wtforms import DecimalField, IntegerField, TimeField, SelectMultipleField, 
 from wtforms.fields import DateTimeField, DateTimeLocalField
 from wtforms.validators import DataRequired, ValidationError
 from flask_wtf import FlaskForm
+from datetime import datetime
+from decimal import ROUND_HALF_UP
 
 
 class CreateUserForm(Form):
     first_name = StringField('First Name', [validators.Length(min=1, max=150), validators.DataRequired()])
     last_name = StringField('Last Name', [validators.Length(min=1, max=150), validators.DataRequired()])
     level = SelectField('Choose your Level', [validators.DataRequired()], choices=[('', 'Select'), ('P1', 'Primary 1'), ('P2', 'Primary 2'), ('P3', 'Primary 3'), ('P4', 'Primary 4'), ('P5', 'Primary 5'), ('P6', 'Primary 6')], default='')
+    gender = SelectField('Gender',
+                         choices=[('', 'Select'), ('F', 'Female'), ('M', 'Male')],
+                         default='')
+    email = StringField('Email', [validators.length(min=1, max=150), validators.DataRequired()])
+    date_joined = DateField('Date Joined',  [validators.DataRequired()])
+    address = StringField('Address')
     subject = SelectMultipleField('Choose your Subject(s)', [validators.DataRequired()], choices=[('E', 'English'), ('M', 'Math'), ('S', 'Science'), ('C', 'Chinese')], default='')
     # announcement_descriptions = TextAreaField('Enter descriptions for announcement', [validators.Optional()])
     announcement_descriptions = StringField(default='nu')
@@ -32,8 +40,7 @@ class CreateAnnouncementForm(Form):
     announcement_descriptions = TextAreaField('Enter descriptions for announcement', [validators.Length(min=1, max=1000), validators.DataRequired()])
     salutation = RadioField('Salutation', choices=[('Dr', 'Dr'), ('Mr', 'Mr'), ('Mrs', 'Mrs'), ('Miss', 'Miss'), ('Ms', 'Ms')], default='Dr')
     tutor_full_name = SelectField('Full name of Tutor', [validators.DataRequired()], choices=[('', 'Select'), ('BL', 'Bobby Liu'), ('AW', 'Andy Wong')], default='')
-    created_datetime = DateTimeLocalField('Created date & time',  format="%Y-%m-%dT%H:%M", validators=[validators.DataRequired()])
-    # default=datetime.today,
+    created_datetime = DateTimeLocalField('Created date & time',  format="%Y-%m-%dT%H:%M", default=datetime.today, validators=[validators.DataRequired()])
 
 class CreateProgressreportForm(Form):
     first_name = StringField('First Name', [validators.Length(min=1, max=150), validators.DataRequired()])
