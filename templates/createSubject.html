@@ -3,6 +3,7 @@
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
 <h1 class="display-4">New Subject</h1>
+<di class="container">
 <form method="POST" action="">
 <div class="form-group">
 {{ render_field(form.title, class="form-control") }}
@@ -20,4 +21,5 @@
         <input type="submit" value="Save" class="btn btn-primary"/>
     </div>
 </form>
+</div>
 {% endblock %}

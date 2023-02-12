@@ -3,6 +3,7 @@
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
 <h1 class="display-4">New Student</h1>
+<div class="container">
 <form method="POST" action="/createStudent">
 <div class="form-group">
     {{ render_field(form.first_name, class="form-control") }}
@@ -43,4 +44,5 @@
         <input type="submit" value="Save" class="btn btn-primary"/>
     </div>
     </form>
+    </div>
     {% endblock %}

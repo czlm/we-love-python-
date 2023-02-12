@@ -3,6 +3,7 @@
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
 <h1 class="display-4">Class Withdrawal</h1>
+<div class="container">
 <form method="POST" action="">
   <div class="form-group">
 {{ render_field(form.first_name, class="form-control") }}
@@ -33,4 +34,5 @@
     <input type="" value="Cancel" class= "btn btn-warning"/>
   </div>
 </form>
+</div>
 {% endblock %}
