@@ -10,8 +10,8 @@ class CreateUserForm(Form):
     last_name = StringField('Last Name', [validators.Length(min=1, max=150), validators.DataRequired()])
     level = SelectField('Choose your Level', [validators.DataRequired()], choices=[('', 'Select'), ('P1', 'Primary 1'), ('P2', 'Primary 2'), ('P3', 'Primary 3'), ('P4', 'Primary 4'), ('P5', 'Primary 5'), ('P6', 'Primary 6')], default='')
     subject = SelectMultipleField('Choose your Subject(s)', [validators.DataRequired()], choices=[('E', 'English'), ('M', 'Math'), ('S', 'Science'), ('C', 'Chinese')], default='')
-    announcement_descriptions = TextAreaField('Enter descriptions for announcement', [validators.Optional()])
-    # announcement_descriptions = RadioField('Membership', choices=[('F', 'Fellow'), ('S', 'Senior'), ('P', 'Professional')], default='F')
+    # announcement_descriptions = TextAreaField('Enter descriptions for announcement', [validators.Optional()])
+    announcement_descriptions = StringField(default='nu')
     # grade = RadioField('Grade', choices=[(0, ''), (1, ''), (2, ''), (3, ''), (4, ''), (5, '')], default='0')
     grade = IntegerField('Grade for this class', [validators.NumberRange(max=0, message='Key either 1, 2, 3, 4 only'), validators.DataRequired()])
 
@@ -59,7 +59,7 @@ class CreateTeacherForm(Form):
     address = StringField('Address')
     subject = SelectMultipleField('Choose your Subject(s)', [validators.DataRequired()], choices=[('E', 'English'), ('M', 'Math'), ('S', 'Science'), ('C', 'Chinese')], default='')
     # announcement_descriptions = RadioField('Membership', choices=[('F', 'Fellow'), ('S', 'Senior'), ('P', 'Professional')], default='F')
-    announcement_descriptions = TextAreaField('Enter descriptions for announcement', [validators.Optional()])
+    # announcement_descriptions = TextAreaField('Enter descriptions for announcement', [validators.Optional()])
 
 
 

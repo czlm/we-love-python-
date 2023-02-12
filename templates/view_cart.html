@@ -1,0 +1,17 @@
+<html>
+<head>
+  <title>Cart</title>
+</head>
+<body>
+  <h1>Cart</h1>
+  <ul>
+    {% for item in cart %}
+      {% if item in products_db %}
+        <li>{{ products_db[item].name }}</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+  Total Price: {{ total_price }}
+  <a href="{{ url_for('home') }}">Back to Products</a>
+</body>
+</html>

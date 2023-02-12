@@ -1,40 +1,31 @@
 {% extends "Tbase.html" %}
-{% block title %}EG Admin - Manage Teachers{% endblock %}
+{% block title %}EG - Edit Teachers{% endblock %}
+
 
 {% block head %}
 {{ super() }}
 <!-- CSS -->
 <style type="text/css">
-.head {
-    padding-top: 10px;
-    padding-bottom: 20px;
-}
+body{
+    font-family: Verdana, sans-serif;
+    color: #947667;
+    padding-top:10px;
+    align-items:center;
+    justify-content:center;
+    height:auto;
+    margin:0px;
+    padding:0px;
 
-#title {
-    background: #947667;
-    border-radius: 30px;
-    color: white;
-    font-family: helvetica, sans-serif;
-    font-weight: bold;
-    font-size: 15px;
-    padding: 20px;
-    width: 200px;
-    text-align: center;
-}
 
-.container {
-    width: 100%;
-    padding: 20px 60px 60px 60px;
 }
-
-.innercontainer {
+    .container {
     background: #F6F4F4;
     border-radius: 20px;
     width: 100%;
-    padding: 10px;
+    padding: 20px;
+    margin-top: 20px;
 }
-
-#text {
+th {
   font-family: Verdana, sans-serif;
   color: #947667;
   font-size: 15px;
@@ -42,7 +33,7 @@
   padding: 30px 0px 40px 0px;
 }
 
-#text2 {
+tr {
   font-family: Verdana, sans-serif;
   color: #947667;
   font-size: 15px;
@@ -63,121 +54,57 @@ table {
 }
 
 
-
-
 </style>
 {% endblock %}
 
 {% block content %}
-{% if 'teacher_created' in session %}
-<div class="alert alert-success alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {{ session.pop('teacher_created', None) }} was created.
+<h1 class="display-4">Manage Teachers</h1>
+<div>
+    {% if count == 0 %}
+    <p>There are no teachers.</p>
+    {% elif count == 1 %}
+    <p>There is 1 teacher.</p>
+    {% else %}
+    <p>There are {{ count }} teachers.</p>
+    {% endif %}
 </div>
-{% elif 'teacher_updated' in session %}
-<div class="alert alert-warning alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {{ session.pop('teacher_updated', None) }} was updated.
-</div>
-{% elif 'teacher_deleted' in session %}
-<div class="alert alert-danger alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {{ session.pop('teacher_deleted', None) }} was deleted.
-</div>
-{% endif %}
+<a href="/createTeacher" class="btn btn-primary">New Teacher</a>
+<div class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th> Gender</th>
+            <th> Email</th>
+            <th> Date Joined</th>
+            <th> Address</th>
 
-
-<div class="head">
-    <h4 class="display-4" id="title">Manage Teacher</h4>
-</div>
-<div class="container "
-     style="max-width: 100%; max-height: 100%; margin: auto; ">
-    <div>
-        {% if count == 0 %}
-        <p>There are no teachers.</p>
-        {% elif count == 1 %}
-        <p>There is 1 teacher.</p>
-        {% else %}
-        <p>There are {{ count }} teachers.</p>
-        {% endif %}
-    </div>
-    <div class="innercontainer">
-        <table class="table table-hover">
-            <thead id="text">
-            <tr>
-                <th>ID</th>
-                <th>Salutation</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Gender</th>
-                <th>Email</th>
-                <th>Date Joined</th>
-                <th>Address</th>
-                <th>Subject</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for teacher in teachers_list %}
-            <tr class="text2">
-                <td>{{ teacher.get_teacher_id() }}</td>
-                <td>{{ teacher.get_salutation() }}</td>
-                <td>{{ teacher.get_first_name() }}</td>
-                <td>{{ teacher.get_last_name() }}</td>
-                <td>{{ teacher.get_gender() }}</td>
-                <td>{{ teacher.get_email() }}</td>
-                <td>{{ teacher.get_date_joined() }}</td>
-                <td>{{ teacher.get_address() }}</td>
-
-                <td><a href="/updateTeacher/{{teacher.get_teacher_id()}}" class="btn btn-warning">Update</a></td>
-                <td>
-                    <form action="{{url_for('delete_teacher', id=teacher.get_teacher_id())}}" method="POST">
-                        {# <input type="submit" value="Delete" class="btn btn-danger"
-                                  onclick="return confirm('Are you sure you want to delete {{ teacher.get_salutation() }} {{teacher.get_first_name()}} {{teacher.get_last_name()}}
-                              {{ teacher.get_gender() }} {{ teacher.get_email() }} {{ teacher.get_date_joined() }} {{ teacher.get_address() }} {{ teacher.get_subject() }}?');">#}
-                        <!-- Button to Open the Modal -->
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#myModal_{{teacher.get_teacher_id()}}">
-                            Delete
-                        </button>
-
-                        <!-- The Modal -->
-                        <div class="modal" id="myModal_{{teacher.get_teacher_id()}}">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-
-                                    <!-- Modal Header -->
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Delete Confirmation</h4>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-
-                                    <!-- Modal body -->
-                                    <div class="modal-body">
-                                        Are you sure you want to delete {{ teacher.get_salutation() }} {{teacher.get_first_name()}}
-                                        {{teacher.get_last_name()}}
-                                        {{ teacher.get_gender() }} {{ teacher.get_email() }} {{
-                                        teacher.get_date_joined() }} {{ teacher.get_address() }} {{
-                                        teacher.get_subject() }}??
-                                    </div>
-
-                                    <!-- Modal footer -->
-                                    <div class="modal-footer">
-                                        <input type="submit" value="Delete" class="btn btn-danger">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
-                                        </button>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for teacher in teacher_list %}
+        <tr>
+            <td>{{ teacher.get_teacher_id() }}</td>
+            <td>{{ teacher.get_first_name() }}</td>
+            <td>{{ teacher.get_last_name() }}</td>
+            <td>{{ teacher.get_gender() }}</td>
+            <td>{{ teacher.get_email() }}</td>
+            <td>{{ teacher.get_date_joined() }}</td>
+            <td>{{ teacher.get_address() }}</td>
+            <td><a href="/updateteacher/{{teacher.get_teacher_id()}}" class="btn btn-warning">Update</a></td>
+            <td>
+                <form action="{{url_for('delete_teacher', id=teacher.get_teacher_id())}}" method="POST">
+                    <input type="submit" value="Delete" class="btn btn-danger"
+                           onclick="return confirm('Are you sure you want to delete {{teacher.get_first_name()}}?');">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}
-
-
-

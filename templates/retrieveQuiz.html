@@ -1,14 +1,32 @@
 {% extends "Tbase.html" %}
-{% block title %}EG Admin - Edit Quizzes{% endblock %}
+{% block title %}EG - Edit Quizzes{% endblock %}
+
 
 {% block head %}
 {{ super() }}
 <!-- CSS -->
 <style type="text/css">
+.head {
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+#title {
+    background: #947667;
+    border-radius: 30px;
+    color: white;
+    font-family: helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+}
+
 body{
     font-family: Verdana, sans-serif;
     color: #947667;
-    padding-top:100px;
+    padding-top:10px;
     align-items:center;
     justify-content:center;
     height:auto;
@@ -52,11 +70,14 @@ table {
   border-radius: 15px;
 }
 
+
 </style>
 {% endblock %}
 
 {% block content %}
-<h1 class="display-4 text-center">Edit Quizzes</h1>
+<div class="head">
+    <h4 class="display-4" id="title">Edit Quizzes</h4>
+</div>
 <div>
     {% if count == 0 %}
     <p class="text-center">There are no quizzes.</p>
@@ -66,7 +87,6 @@ table {
     <p class="text-center">There are {{ count }} quizzes.</p>
     {% endif %}
 </div>
-
 <div class="container ">
     <table class="table">
         <thead>

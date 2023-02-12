@@ -1,0 +1,261 @@
+{% extends "Gbase.html" %}
+{% block title %}Edugrow - Create Payment{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<meta name="description" content="This is the description">
+<style>
+.content-section {
+    margin: auto;
+}
+
+.btn {
+  border: 1px solid #D9D9D8;
+  background: #D9D9D8;
+  color: #947667;
+  padding: 14px 28px;
+  font-size: 15px;
+  border-radius: 15px;
+  display: block;
+  margin-top: 10px;
+
+}
+
+.btn-header:hover {
+    background-color: #4A6F8F;;
+}
+
+.btn-primary:hover {
+    background-color: #4A6F8F;
+}
+
+
+.shop-item {
+    margin: 30px;
+}
+
+.shop-item-title {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20x;
+    color: #947667;
+    font-family: helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.shop-item-image {
+    height: 250px;
+    margin-top: 20px;
+}
+
+.shop-item-details {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.shop-item-price {
+    flex-grow: 1;
+    color: #947667;
+    text-align: center;
+}
+
+.shop-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.cart-header {
+    font-weight: bold;
+    font-size: 1.25em;
+    color: #947667;
+}
+
+.cart-column {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid black;
+    margin-right: 1.5em;
+    padding-bottom: 10px;
+    margin-top: 10px;
+}
+
+.cart-row {
+    display: flex;
+}
+
+.cart-item {
+    width: 45%;
+}
+
+.cart-price {
+    width: 20%;
+    font-size: 1.2em;
+    color: #947667;
+}
+
+.cart-quantity {
+    width: 35%;
+}
+
+.cart-item-title {
+    color: #947667;
+    margin-left: .5em;
+    font-size: 1.2em;
+}
+
+.cart-item-image {
+    width: 75px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.cart-quantity-input {
+    height: 34px;
+    width: 50px;
+    border-radius: 5px;
+    border: 1px solid #56CCF2;
+    background-color: #eee;
+    color: #333;
+    padding: 0;
+    text-align: center;
+    font-size: 1.2em;
+    margin-right: 25px;
+}
+
+.cart-row:last-child {
+    border-bottom: 1px solid black;
+}
+
+.cart-row:last-child .cart-column {
+    border: none;
+}
+
+.cart-total {
+    text-align: end;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.cart-total-title {
+    font-weight: bold;
+    font-size: 1.5em;
+    color: #947667;
+    margin-right: 20px;
+}
+
+.cart-total-price {
+    color: #947667;
+    font-size: 1.1em;
+}
+
+.btn-purchase {
+    display: block;
+    margin: 40px auto 80px auto;
+    font-size: 1.75em;
+}
+#questions {
+    margin-top: 50px;
+    background: #947667;
+    border-radius: 30px;
+    color: white;
+    font-family: helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+}
+
+#question {
+    margin-top: 50px;
+    color: #947667;
+    font-family: helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+#change {
+    display: block;
+    margin-top: 10px;
+  }
+
+</style>
+<script type="text/javascript" src="../static/js/store.js"></script>
+<body>
+<h2 id="questions">Subjects</h2>
+<div style="padding: 50px; margin:auto; width:100%px; text-align:center;">
+    <section class="container content-section">
+        <div class="shop-items">
+            <div class="shop-item">
+                <span class="shop-item-title">English</span>
+                <img class="shop-item-image" src="../static/images/english.png">
+                <div class="shop-item-details">
+                    <span class="shop-item-price">$150/month</span>
+
+                </div>
+                <center>
+                    <button class="btn btn-primary shop-item-button" type="button" id="change">APPLY</button>
+                </center>
+            </div>
+            <div class="shop-item">
+                <span class="shop-item-title">Chinese</span>
+                <img class="shop-item-image" src="../static/images/chi.png">
+                <div class="shop-item-details">
+                    <span class="shop-item-price">$150/month</span>
+
+                </div>
+                <center>
+                    <button class="btn btn-primary shop-item-button" type="button" id="change">APPLY</button>
+                </center>
+            </div>
+            <div class="shop-item">
+                <span class="shop-item-title">Math</span>
+                <img class="shop-item-image" src="../static/images/math.png">
+                <div class="shop-item-details">
+                    <span class="shop-item-price">$150/month</span>
+
+                </div>
+                <center>
+                    <button class="btn btn-primary shop-item-button" type="button" id="change">APPLY</button>
+                </center>
+            </div>
+            <div class="shop-item">
+                <span class="shop-item-title">Science</span>
+                <img class="shop-item-image" src="../static/images/science.png">
+                <div class="shop-item-details">
+                    <span class="shop-item-price">$150/month</span>
+
+                </div>
+                <center>
+                    <button class="btn btn-primary shop-item-button" type="button" id="change">APPLY</button>
+                </center>
+            </div>
+        </div>
+    </section>
+</div>
+<h2 id="question">Your Cart</h2>
+<section class="container content-section">
+    <div class="cart-row">
+        <span class="cart-item cart-header cart-column">ITEM</span>
+        <span class="cart-price cart-header cart-column">PRICE</span>
+        <span class="cart-quantity cart-header cart-column">QUANTITY</span>
+    </div>
+    <div class="cart-items">
+    </div>
+    <div class="cart-total">
+        <strong class="cart-total-title">Total</strong>
+        <span class="cart-total-price">$0/month</span>
+    </div>
+</section>
+<a href="/createPayment" class="btn btn-primary btn-purchase" type="button" style="width:200px;">PURCHASE</a>
+</body>
+</html>
+{% endblock %}

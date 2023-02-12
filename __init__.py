@@ -1,20 +1,50 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, g
 from Forms import CreateUserForm, CreateGradeForm, CreateAnnouncementForm, CreateProgressreportForm, CreateTeacherForm, CreateQuizForm
-import shelve, User, Grade, Announcement, Progressreport, Teacher, Quiz, Comment
+import shelve, User, Grade, Announcement, Progressreport, Teacher, Quiz, FAQ, Comment, Subject, Payment
 from datetime import datetime
+
 
 from werkzeug.utils import secure_filename
 from Forms1 import CreateFAQForm
 from Gcomment import CreateCommentForm
-import shelve, FAQ
+
+
+import Student
+import SubjectStudent
+import SubjectTeacher
+from Forms2 import *
+
+
+from Forms3 import CreatePaymentForm
+# import stripe
 
 
 app = Flask(__name__)
 app.secret_key = 'any_random_string'
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
 
 @app.route('/')
 def guest_home_page():
     return render_template('ghome.html')
+
+@app.route('/english')
+def english_page():
+    return render_template('english.html')
+
+@app.route('/math')
+def math_page():
+    return render_template('math.html')
+
+@app.route('/chinese')
+def chinese_page():
+    return render_template('chinese.html')
+
+@app.route('/science')
+def science_page():
+    return render_template('science.html')
+
+
 
 @app.route('/studentHomePage')
 def studentHomePage():
@@ -731,115 +761,6 @@ def delete_progressreport(id):
 
 
 
-
-@app.route('/createTeacher', methods=['GET', 'POST'])
-def create_teacher():
-    subjects = ['English', 'Math', 'Science', 'Chinese']
-    create_teacher_form = CreateTeacherForm(request.form)
-    if request.method == 'POST':
-        teachers_dict = {}
-        # print(request.form.getlist('mycheckbox')) #returns subjects in a python list
-        db = shelve.open('teacher.db', 'c')
-
-        try:
-            if 'Teachers' in db:
-                teachers_dict = db['Teachers']
-            else:
-                db['Teachers'] = teachers_dict
-        except:
-            print("Error in retrieving Teachers from teacher.db.")
-
-        teacher = Teacher.Teacher(create_teacher_form.salutation.data, create_teacher_form.first_name.data, create_teacher_form.last_name.data, create_teacher_form.gender.data, request.form.getlist('mycheckbox'),
-                         create_teacher_form.email.data, create_teacher_form.date_joined.data, create_teacher_form.address.data, create_teacher_form.subject.data)
-        teachers_dict[teacher.get_teacher_id()] = teacher
-
-        db['Teachers'] = teachers_dict
-
-        db.close()
-
-        session['teacher_created'] = teacher.get_first_name() + ' ' + teacher.get_last_name()
-
-        return redirect(url_for('teacherHomePage'))
-    return render_template('createTeacher.html', form=create_teacher_form, subjects=subjects)
-
-
-@app.route('/retrieveTeachers')
-def retrieve_teachers():
-    teachers_dict = {}
-    db = shelve.open('teacher.db', 'c')
-    try:
-        teachers_dict = db['Teachers']
-    except:
-        print("Error in retrieving Teachers from teacher.db.")
-    db.close()
-
-    teachers_list = []
-    for key in teachers_dict:
-        teacher = teachers_dict.get(key)
-        teachers_list.append(teacher)
-
-    return render_template('retrieveTeachers.html', count=len(teachers_list), teacherslist=teachers_list)
-
-
-@app.route('/updateTeacher/<int:id>/', methods=['GET', 'POST'])
-def update_teacher(id):
-    update_teacher_form = CreateTeacherForm(request.form)
-    if request.method == 'POST' and update_teacher_form.validate():
-        teachers_dict = {}
-        db = shelve.open('teacher.db', 'w')
-        teachers_dict = db['Teachers']
-
-        teacher = teachers_dict.get(id)
-        teacher.set_salutation(update_teacher_form.salutation.data)
-        teacher.set_first_name(update_teacher_form.first_name.data)
-        teacher.set_last_name(update_teacher_form.last_name.data)
-        teacher.set_gender(update_teacher_form.gender.data)
-        teacher.set_email(update_teacher_form.email.data)
-        teacher.set_date_joined(update_teacher_form.date_joined.data)
-        teacher.set_address(update_teacher_form.address.data)
-        teacher.set_subject(update_teacher_form.subject.data)
-
-
-        db['Teachers'] = teachers_dict
-        db.close()
-
-        session['teacher_updated'] = teacher.get_first_name() + ' ' + teacher.get_last_name()
-
-        return redirect(url_for('retrieve_teachers'))
-    else:
-        teachers_dict = {}
-        db = shelve.open('teacher.db', 'r')
-        teachers_dict = db['Teachers']
-        db.close()
-
-        teacher = teachers_dict.get(id)
-        update_teacher_form.salutation.data = teacher.get_salutation()
-        update_teacher_form.first_name.data = teacher.get_first_name()
-        update_teacher_form.last_name.data = teacher.get_last_name()
-        update_teacher_form.gender.data = teacher.get_gender()
-        update_teacher_form.email.data = teacher.get_email()
-        update_teacher_form.date_joined.data = teacher.get_date_joined()
-        update_teacher_form.address.data = teacher.get_address()
-        update_teacher_form.subject.data = teacher.get_subject()
-
-        return render_template('updateTeacher.html', form=update_teacher_form)
-
-
-@app.route('/deleteTeacher/<int:id>', methods=['POST'])
-def delete_teacher(id):
-    teachers_dict = {}
-
-    db = shelve.open('teacher.db', 'w')
-    teachers_dict = db['Teachers']
-    teachers_dict.pop(id)
-    db['Teachers'] = teachers_dict
-    db.close()
-    # session['teacher_deleted'] = teacher.get_first_name() + ' ' + teacher.get_last_name()
-
-    return redirect(url_for('retrieve_teachers'))
-
-
-
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 
@@ -915,6 +836,19 @@ def retrieve_quiz():
     return render_template('retrieveQuiz.html', count=len(quiz_list), quiz_list=quiz_list)
 
 
+@app.route('/retrieveQuiz2')
+def retrieve_quiz2():
+    quiz_dict = {}
+    db = shelve.open('quiz.db', 'r')
+    quiz_dict = db['Quizzes']
+    db.close()
+
+    quiz_list = []
+    for key in quiz_dict:
+        quiz = quiz_dict.get(key)
+        quiz_list.append(quiz)
+
+    return render_template('retrieveQuiz2.html', count=len(quiz_list), quiz_list=quiz_list)
 
 @app.route('/updateQuiz/<int:id>/', methods=['GET', 'POST'])
 def update_quiz(id):
@@ -973,6 +907,176 @@ def delete_quiz(id):
     db.close()
 
     return redirect(url_for('retrieve_quiz'))
+
+
+
+@app.route('/takeQuiz/<int:id>', methods=['GET', 'POST'])
+def take_quiz(id):
+    quiz_dict = {}
+    db = shelve.open('quiz.db', 'r')
+    quiz_dict = db['Quizzes']
+    db.close()
+
+    quiz = quiz_dict.get(id)
+    qn_list = []
+    qn_list.append(quiz)
+
+    create_ans_form = CreateQuizForm(request.form)
+    if request.method == 'POST':  # and create_quiz_form.validate():
+        answer_dict = {}
+        db = shelve.open('answer.db', 'c')
+
+        try:
+            answer_dict = db['Answers']
+
+        except:
+            print("Error in retrieving answers from answer.db")
+
+        import Answer
+        answer = Answer.Answer(1, 1, 1, create_ans_form.a1.data, create_ans_form.a2.data, create_ans_form.a3.data,
+                               create_ans_form.a4.data, create_ans_form.a5.data)
+        if len(answer_dict) == 0:
+            answer.set_answer_id(1)
+        else:
+            answer.set_answer_id(max(answer_dict.keys()) + 1)
+
+        answer_dict[answer.get_answer_id()] = answer
+
+        db['Answers'] = answer_dict
+        db.close()
+        return redirect(url_for('studentHomePage'))
+    return render_template('takeQuiz.html', form=create_ans_form, qn_list=qn_list)
+
+
+
+@app.route('/submitQuiz' , methods=['GET', 'POST'])
+def submit_quiz():
+    create_ans_form = CreateQuizForm(request.form)
+    if request.method == 'POST':  # and create_quiz_form.validate():
+        answer_dict = {}
+        db = shelve.open('answer.db', 'c')
+
+        try:
+            answer_dict = db['Answers']
+
+        except:
+            print("Error in retrieving answers from answer.db")
+
+        import Answer
+        answer = Answer.Answer(1,1,1, create_ans_form.a1.data, create_ans_form.a2.data, create_ans_form.a3.data, create_ans_form.a4.data, create_ans_form.a5.data)
+        if len(answer_dict) == 0:
+            answer.set_answer_id(1)
+        else:
+            answer.set_answer_id(max(answer_dict.keys()) + 1)
+
+        answer_dict[answer.get_answer_id()] = answer
+
+        db['Answers'] = answer_dict
+        db.close()
+        return redirect(url_for('studentHomePage'))
+    return render_template('takeQuiz.html', form=create_ans_form)
+
+
+
+@app.route('/deleteSubjectStudent/<int:id>', methods=['POST'])
+def delete_subject_student(id):
+    subject_student_dict = {}
+    db = shelve.open('subject_student.db', 'w')
+    subject_student_dict = db['SubjectStudents']
+    subject_student_dict.pop(id)
+    db['SubjectStudents'] = subject_student_dict
+    db.close()
+
+    return redirect(url_for('retrieve_students'))
+
+
+@app.route('/retrieveAnswers')
+def retrieve_answers():
+    answer_dict = {}
+    db = shelve.open('answer.db', 'r')
+    answer_dict = db['Answers']
+    db.close()
+
+    answer_list = []
+    for key in answer_dict:
+        answer = answer_dict.get(key)
+        answer_list.append(answer)
+
+    return render_template('retrieveAnswers.html', count=len(answer_list), answer_list=answer_list)
+
+@app.route('/markAnswer/<int:id>', methods=['GET', 'POST'])
+def mark_answer(id):
+    answer_dict = {}
+    db = shelve.open('answer.db', 'r')
+    answer_dict = db['Answers']
+    db.close()
+
+    answer = answer_dict.get(id)
+    ans_list = []
+    ans_list.append(answer)
+
+    quiz_dict = {}
+    db = shelve.open('quiz.db', 'r')
+    quiz_dict = db['Quizzes']
+    db.close()
+
+    quiz = quiz_dict.get(id)
+    qn_list = []
+    qn_list.append(quiz)
+
+    create_score_form = CreateQuizForm(request.form)
+    if request.method == 'POST':  # and create_quiz_form.validate():
+        score_dict = {}
+        db = shelve.open('score.db', 'c')
+
+        try:
+            answer_dict = db['Scores']
+
+        except:
+            print("Error in retrieving scores from score.db")
+
+        import Score
+        score = Score.Score(1, 1, create_score_form.s1.data, create_score_form.s2.data, create_score_form.s3.data,
+                               create_score_form.s4.data, create_score_form.s5.data)
+        if len(score_dict) == 0:
+            score.set_score_id(1)
+        else:
+            score.set_score_id(max(score_dict.keys()) + 1)
+
+        score_dict[score.get_score_id()] = score
+
+        db['Scores'] = score_dict
+        db.close()
+        return redirect(url_for('home'))
+    return render_template('markAnswer.html', form=create_score_form, ans_list=ans_list, qn_list=qn_list)
+
+@app.route('/submitScore' , methods=['GET', 'POST'])
+def submit_score():
+    create_score_form = CreateQuizForm(request.form)
+    if request.method == 'POST':  # and create_quiz_form.validate():
+        score_dict = {}
+        db = shelve.open('score.db', 'c')
+
+        try:
+            answer_dict = db['Scores']
+
+        except:
+            print("Error in retrieving scores from score.db")
+
+        import Score
+        score = Score.Score(1, 1, create_score_form.s1.data, create_score_form.s2.data, create_score_form.s3.data,
+                            create_score_form.s4.data, create_score_form.s5.data)
+        if len(score_dict) == 0:
+            score.set_score_id(1)
+        else:
+            score.set_score_id(max(score_dict.keys()) + 1)
+
+        score_dict[score.get_score_id()] = score
+
+        db['Scores'] = score_dict
+        db.close()
+        return redirect(url_for('home'))
+    return render_template('markAnswer.html', form=create_score_form)
 
 
 
@@ -1136,6 +1240,425 @@ def delete_comment(id):
     db.close()
 
     return redirect(url_for('retrieve_comments'))
+
+
+
+
+@app.route('/createSubject', methods=['GET', 'POST'])
+def create_subject():
+    create_subject_form = CreateSubjectForm(request.form)
+    if request.method == 'POST' and create_subject_form.validate():
+        subject_dict = {}
+        db = shelve.open('subject.db', 'c')
+
+        try:
+            subject_dict = db['Subjects']
+
+        except:
+            print('Error retrieving Subjects from subject.db')
+        subject = Subject.Subject(1, create_subject_form.title.data, create_subject_form.description.data, create_subject_form.price.data,
+                                  create_subject_form.level.data)
+        if len(subject_dict) != 0 and subject.get_subject_id() <= int(list(subject_dict.keys())[-1]):
+            subject.set_subject_id(int(list(subject_dict.keys())[-1]) + 1)
+            subject_dict[subject.get_subject_id()] = subject
+        else:
+            subject_dict[subject.get_subject_id()] = subject
+
+        subject_dict[subject.get_subject_id()] = subject
+
+        db['Subjects'] = subject_dict
+        db.close()
+
+        return redirect(url_for('retrieve_subjects'))
+    return render_template('createSubject.html', form=create_subject_form)
+
+
+@app.route('/retrieveSubjects')
+def retrieve_subjects():
+    subject_dict = {}
+    db = shelve.open('subject.db', 'r')
+    subject_dict = db['Subjects']
+    db.close()
+
+    subjects_list = []
+    for key in subject_dict:
+        subject = subject_dict.get(key)
+        subjects_list.append(subject)
+
+    return render_template('retrieveSubjects.html', count=len(subjects_list), subjects_list=subjects_list)
+
+
+@app.route('/updateSubject/<int:id>/', methods=['GET', 'POST'])
+def update_subjects(id):
+    update_subject_form = CreateSubjectForm(request.form)
+    if request.method == 'POST' and update_subject_form.validate():
+        subject_dict = {}
+        db = shelve.open('subject.db', 'w')
+        subject_dict = db['Subjects']
+
+        subject = subject_dict.get(id)
+        subject.set_title(update_subject_form.title.data)
+        subject.set_description(update_subject_form.description.data)
+        subject.set_level_id(update_subject_form.level.data)
+
+        db['Subjects'] = subject_dict
+        db.close()
+        return redirect(url_for('retrieve_subjects'))
+    else:
+        subject_dict = {}
+        db = shelve.open('subject.db', 'r')
+        subject_dict = db['Subjects']
+        db.close()
+
+        subject = subject_dict.get(id)
+        update_subject_form.title.data = subject.get_title()
+        update_subject_form.description.data = subject.get_description()
+        update_subject_form.level.data = subject.get_level_id()
+
+        return render_template('updateSubject.html', form=update_subject_form)
+
+
+@app.route('/deleteSubject/<int:id>', methods=['POST'])
+def delete_subject(id):
+    subject_dict = {}
+    db = shelve.open('subject.db', 'w')
+    subject_dict = db['Subjects']
+    subject_dict.pop(id)
+    db['Subjects'] = subject_dict
+    db.close()
+
+    return redirect(url_for('retrieve_subjects'))
+
+
+
+@app.route('/createTeacher', methods=['GET', 'POST'])
+def create_teacher():
+    create_teacher_form = CreateStudentForm(request.form)
+    if request.method == 'POST' and create_teacher_form.validate():
+        teacher_dict = {}
+        db =shelve.open('teacher.db', 'c')
+        try:
+            teacher_dict = db['Teachers']
+
+        except:
+            print('Error retrieving Teachers from teacher.db')
+        import Teacher
+        teacher = Teacher.Teacher(create_teacher_form.first_name.data, create_teacher_form.last_name.data, create_teacher_form.gender.data, 1, create_teacher_form.email.data, create_teacher_form.date_joined.data, create_teacher_form.address.data,create_teacher_form.subject1.data, create_teacher_form.subject2.data, create_teacher_form.subject3.data, create_teacher_form.subject4.data)
+        if len(teacher_dict) != 0 and teacher.get_teacher_id() <= int(list(teacher_dict.keys())[-1]):
+            teacher.set_teacher_id(int(list(teacher_dict.keys())[-1]) + 1)
+            teacher_dict[teacher.get_teacher_id()] = teacher
+        else:
+            teacher_dict[teacher.get_teacher_id()] = teacher
+
+        db['Teachers'] = teacher_dict
+        db.close()
+
+        subject_teacher_dict = {}
+        db = shelve.open('subject_teacher.db', 'c')
+        try:
+            subject_teacher_dict = db['SubjectTeachers']
+
+        except:
+            print('Error retrieving Subject Teachers from subject_teacher.db')
+
+        subject_teacher = SubjectTeacher.SubjectTeacher(1, teacher.get_teacher_id(),
+                                                        int(create_teacher_form.subject1.data))
+        if len(subject_teacher_dict) != 0 and subject_teacher.get_subject_teacher_id() <= int(
+                list(subject_teacher_dict.keys())[-1]):
+            subject_teacher.set_subject_teacher_id((int(list(subject_teacher_dict.keys())[-1]) + 1))
+            subject_teacher_dict[subject_teacher.get_subject_teacher_id()] = subject_teacher
+        else:
+            subject_teacher_dict[subject_teacher.get_subject_teacher_id()] = subject_teacher
+
+        if create_teacher_form.subject2.data != 'N':
+            subject_teacher = SubjectTeacher.SubjectTeacher(1, teacher.get_teacher_id(),
+                                                            int(create_teacher_form.subject2.data))
+            if len(subject_teacher_dict) != 0 and subject_teacher.get_subject_teacher_id() <= int(
+                    list(subject_teacher_dict.keys())[-1]):
+                subject_teacher.set_subject_teacher_id((int(list(subject_teacher_dict.keys())[-1]) + 1))
+                subject_teacher_dict[subject_teacher.get_subject_teacher_id()] = subject_teacher
+            else:
+                subject_teacher_dict[subject_teacher.get_subject_teacher_id()] = subject_teacher
+
+        if create_teacher_form.subject3.data != 'N':
+            subject_teacher = SubjectTeacher.SubjectTeacher(1, teacher.get_teacher_id(),
+                                                            int(create_teacher_form.subject3.data))
+            if len(subject_teacher_dict) != 0 and subject_teacher.get_subject_teacher_id() <= int(
+                    list(subject_teacher_dict.keys())[-1]):
+                subject_teacher.set_subject_teacher_id((int(list(subject_teacher_dict.keys())[-1]) + 1))
+                subject_teacher_dict[subject_teacher.get_subject_teacher_id()] = subject_teacher
+            else:
+                subject_teacher_dict[subject_teacher.get_subject_teacher_id()] = subject_teacher
+
+        if create_teacher_form.subject4.data != 'N':
+            subject_teacher = SubjectTeacher.SubjectTeacher(1, teacher.get_teacher_id(),
+                                                            int(create_teacher_form.subject2.data))
+            if len(subject_teacher_dict) != 0 and subject_teacher.get_subject_teacher_id() <= int(
+                    list(subject_teacher_dict.keys())[-1]):
+                subject_teacher.set_subject_teacher_id((int(list(subject_teacher_dict.keys())[-1]) + 1))
+                subject_teacher_dict[subject_teacher.get_subject_teacher_id()] = subject_teacher
+            else:
+                subject_teacher_dict[subject_teacher.get_subject_teacher_id()] = subject_teacher
+
+        db['SubjectTeachers'] = subject_teacher_dict
+        db.close()
+
+        return redirect(url_for('teacherHomePage'))
+    return render_template('createTeacher.html', form=create_teacher_form)
+
+@app.route('/retrieveTeachers')
+def retrieve_teachers():
+    teacher_dict = {}
+    db = shelve.open('teacher.db', 'r')
+    teacher_dict = db['Teachers']
+    db.close()
+
+    teacher_list = []
+    for key in teacher_dict:
+        teacher = teacher_dict.get(key)
+        teacher_list.append(teacher)
+
+    return render_template('retrieveTeachers.html', count=len(teacher_list), teacher_list=teacher_list)
+
+@app.route('/updateTeacher/<int:id>/', methods=['GET', 'POST'])
+def update_teachers(id):
+    update_teacher_form = CreateStudentForm(request.form)
+    if request.method == 'POST' and update_teacher_form.validate():
+        teacher_dict = {}
+        db = shelve.open('teacher.db', 'w')
+        teacher_dict = db['teachers']
+
+        teacher = teacher_dict.get(id)
+        teacher.set_first_name(update_teacher_form.first_name.data)
+        teacher.set_last_name(update_teacher_form.last_name.data)
+        teacher.set_gender(update_teacher_form.gender.data)
+        teacher.set_email(update_teacher_form.email.data)
+        teacher.set_date_joined(update_teacher_form.date_joined.data)
+        teacher.set_address(update_teacher_form.address.data)
+
+        db['teachers'] = teacher_dict
+        db.close()
+        return redirect(url_for('retrieve_teacher'))
+    else:
+        teacher_dict = {}
+        db = shelve.open('teacher.db', 'r')
+        teacher_dict = db['Teachers']
+        db.close()
+
+        teacher = teacher_dict.get(id)
+        teacher.set_first_name(update_teacher_form.first_name.data)
+        teacher.set_last_name(update_teacher_form.last_name.data)
+        teacher.set_gender(update_teacher_form.level.data)
+        teacher.set_email(update_teacher_form.email.data)
+        teacher.set_date_joined(update_teacher_form.date_joined.data)
+        teacher.set_address(update_teacher_form.address.data)
+
+        return render_template('updateTeacher.html', form=update_teacher_form)
+
+@app.route('/deleteTeacher/<int:id>', methods=['POST'])
+def delete_teacher(id):
+    teacher_dict = {}
+    db = shelve.open('teacher.db', 'w')
+    teacher_dict = db['Teachers']
+    teacher_dict.pop(id)
+    db['Teachers'] = teacher_dict
+    db.close()
+
+    return redirect(url_for('retrieve_teacher'))
+
+
+@app.route('/createWithdrawal', methods=['GET', 'POST'])
+
+def create_withdrawal():
+    create_withdrawal_form = CreateWithdrawalForm(request.form)
+    if request.method == 'POST' and create_withdrawal_form.validate():
+        withdrawal_dict = {}
+        db = shelve.open('withdrawal.db', 'c')
+
+        try:
+            withdrawal_dict = db['Withdrawals']
+
+        except:
+            print('Error retrieving Withdrawal Applications from Withdrawal.db')
+        import Withdrawal
+        withdrawal = Withdrawal.Withdrawal(1, create_withdrawal_form.first_name.data, create_withdrawal_form.last_name.data, create_withdrawal_form.level.data, create_withdrawal_form.subject.data, create_withdrawal_form.reason.data,create_withdrawal_form.feedback.data,
+                                           create_withdrawal_form.ack.data)
+        if len(withdrawal_dict) != 0 and withdrawal.get_withdrawal_id() <= int(list(withdrawal_dict.keys())[-1]):
+            withdrawal.set_withdrawal_id(int(list(withdrawal_dict.keys())[-1]) + 1)
+            withdrawal_dict[withdrawal.get_withdrawal_id()] = withdrawal
+        else:
+            withdrawal_dict[withdrawal.get_withdrawal_id()] = withdrawal
+
+        withdrawal_dict[withdrawal.get_withdrawal_id()] = withdrawal
+
+        db['Withdrawals'] = withdrawal_dict
+        db.close()
+
+        return redirect(url_for('studentHomePage'))
+    return render_template('createWithdrawal.html', form=create_withdrawal_form)
+
+
+@app.route('/retrieveWithdrawals', )
+def retrieve_withdrawals():
+    withdrawal_dict = {}
+    db = shelve.open('withdrawal.db', 'r')
+    withdrawal_dict = db['Withdrawals']
+    db.close()
+
+    withdrawal_list = []
+    for key in withdrawal_dict:
+        withdrawal = withdrawal_dict.get(key)
+        withdrawal_list.append(withdrawal)
+
+
+    return render_template('retrieveWithdrawals.html', count=len(withdrawal_list), withdrawal_list=withdrawal_list)
+
+@app.route('/deleteWithdrawal/<int:id>', methods=['POST'])
+def delete_withdrawal(id):
+    withdrawal_dict = {}
+    db = shelve.open('withdrawal.db', 'w')
+    withdrawal_dict = db['Withdrawals']
+    withdrawal_dict.pop(id)
+    db['Withdrawals'] = withdrawal_dict
+    db.close()
+
+
+
+
+
+@app.route('/thanks', methods=['GET', 'POST'])
+def thanks():
+    if request.method == 'POST':
+        return redirect(url_for('/'))
+
+    return render_template('thanks.html')
+
+
+
+@app.route('/createPayment', methods=['GET', 'POST'])
+def create_payment():
+    create_payment_form = CreatePaymentForm(request.form)
+    if request.method == 'POST' and create_payment_form.validate():
+        payments_dict = {}
+        db = shelve.open('payment.db', 'c')
+        try:
+            payments_dict = db['Payments']
+        except:
+            print("Error in retrieving Payments from payment.db.")
+
+        payment = Payment.Payment(1, create_payment_form.cardholder_name.data, create_payment_form.card_number.data,
+        create_payment_form.date_of_expiry.data)
+        if len(payments_dict) == 0:
+            payment.set_payment_id(1)
+        else:
+            payment.set_payment_id(max(payments_dict.keys()) +1)
+
+        payments_dict[payment.get_payment_id()] = payment
+        db['Payments'] = payments_dict
+
+        db.close()
+        return redirect(url_for('thanks'))
+    return render_template('createPayment.html', form=create_payment_form)
+
+
+
+
+
+
+
+@app.route('/retrievePayments')
+def retrieve_payments():
+    payments_dict = {}
+    db = shelve.open('payment.db', 'r')
+    payments_dict = db['Payments']
+    db.close()
+
+    payments_list = []
+    for key in payments_dict:
+        payment = payments_dict.get(key)
+        payments_list.append(payment)
+
+
+    return render_template('retrievePayments.html', count=len(payments_list), payments_list=payments_list)
+
+
+
+@app.route('/updatePayment/<int:id>/', methods=['GET', 'POST'])
+def update_payment(id):
+    update_payment_form = CreatePaymentForm(request.form)
+    if request.method == 'POST' and update_payment_form.validate():
+        payments_dict = {}
+        db = shelve.open('payment.db', 'w')
+        payments_dict = db['Payments']
+
+        payment = payments_dict.get(id)
+        payment.set_cardholder_name(update_payment_form.cardholder_name.data)
+        payment.set_card_number(update_payment_form.card_number.data)
+        payment.set_date_of_expiry(update_payment_form.date_of_expiry.data)
+
+
+
+        db['Payments'] = payments_dict
+        db.close()
+
+        return redirect(url_for('retrieve_payments'))
+    else:
+        payments_dict = {}
+        db = shelve.open('payment.db', 'r')
+        payments_dict = db['Payments']
+        db.close()
+
+        payment = payments_dict.get(id)
+        update_payment_form.cardholder_name.data = payment.get_cardholder_name()
+        update_payment_form.card_number.data = payment.get_card_number()
+        update_payment_form.date_of_expiry.data = payment.get_date_of_expiry()
+
+
+
+        return render_template('updatePayment.html', form=update_payment_form)
+
+
+
+@app.route('/deletePayment/<int:id>', methods=['POST'])
+def delete_payment(id):
+    payments_dict = {}
+    db = shelve.open('payment.db', 'w')
+    payments_dict = db['Payments']
+    payments_dict.pop(id)
+    db['Payments'] = payments_dict
+    db.close()
+    return redirect(url_for('retrieve_payments'))
+
+import shelve
+
+
+
+@app.route('/add_to_cart', methods=['POST'])
+def AddCart():
+    try:
+        pass
+    except Exception as e:
+        print(e)
+    finally:
+        return redirect(request.referrer)
+
+# init_db()
+@app.route('/store')
+def store():
+
+    return render_template('store.html')
+
+@app.after_request
+def add_header(response):
+    response.cache_control.max_age = 300
+    return response
+
+
+
+
+
+
+
 
 
 @app.errorhandler(404)

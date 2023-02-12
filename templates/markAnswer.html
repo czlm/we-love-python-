@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Edugrow - Quiz{% endblock %}
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+<h1 class="display-4">Quiz</h1>
+<div class="container">
+<form action="/submitScore" method="POST">
+{% for question in qn_list %}
+{% for ans in ans_list %}
+
+<h1>Question 1:  {{ question.get_q1() }}</h1>
+
+<h2>Answer: {{ ans.get_a1() }}</h2>
+    <h2>Max Score: {{ question.get_ms1() }}</h2>
+        <div class="form-group">
+    {{ render_field(form.s1, class="form-control") }}
+</div>
+
+
+<h1>Question 2:  {{ question.get_q2() }}</h1>
+    <h2>Answer: {{ ans.get_a2() }}</h2>
+        <h2>Max Score: {{ question.get_ms2() }}</h2>
+
+
+        <div class="form-group">
+    {{ render_field(form.s2, class="form-control") }}
+</div>
+
+
+<h1>Question 3: {{ question.get_q3() }}</h1>
+    <h2>Answer: {{ ans.get_a3() }}</h2>
+        <h2>Max Score: {{ question.get_ms3() }}</h2>
+
+
+        <div class="form-group">
+    {{ render_field(form.s3, class="form-control") }}
+</div>
+
+
+    <h1>Question 4: {{ question.get_q4() }}</h1>
+    <h2>Answer: {{ ans.get_a4() }}</h2>
+        <h2>Max Score: {{ question.get_ms4() }}</h2>
+
+
+        <div class="form-group">
+    {{ render_field(form.s4, class="form-control") }}
+</div>
+
+
+    <h1>Question 5: {{ question.get_q5() }}</h1>
+    <h2>Answer: {{ ans.get_a5() }}</h2>
+        <h2>Max Score: {{ question.get_ms5() }}</h2>
+
+
+        <div class="form-group">
+    {{ render_field(form.s5, class="form-control") }}
+</div>
+
+
+
+
+
+{% endfor %}
+    {% endfor %}
+
+<input type="submit" value="Submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to submit?);">
+</form>
+
+
+
+</div>
+{% endblock %}

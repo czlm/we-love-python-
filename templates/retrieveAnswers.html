@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}EG Admin - Mark Answer{% endblock %}
+{% block content %}
+<h1 class="display-4 text-center">Mark Quizzes</h1>
+<div>
+{% if count == 0 %}
+<p class="text-center">There are no answers.</p>
+{% elif count == 1 %}
+<p class="text-center">There is 1 answer.</p>
+{% else %}
+<p class="text-center">There are {{ count }} answers.</p>
+{% endif %}
+</div>
+<div class="container ">
+<table class="table">
+<thead>
+<tr>
+    <th></th>
+<th>Subject ID</th>
+<th>Student ID</th>
+
+<th></th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+{% for answer in answer_list %}
+<tr>
+  <td>{{ answer.get_answer_id() }}</td>
+<td>{{ answer.get_student_id() }}</td>
+<td>{{ answer.get_subject_id() }}</td>
+        <td><a href="/markAnswer/{{answer.get_answer_id()}}" class="btn btn-primary">Mark Answer</a></td>
+
+
+
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}
