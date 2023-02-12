@@ -1,0 +1,284 @@
+{% extends "Gbase.html" %}
+{% block title %}Edugrow - ChatBot{% endblock %}
+
+{% block content %}
+<div class="top"><img src="../static/images/chatbotlogo.png" width="70" height="70" id="logo"><span class="agent">Customer Support Agent</span></div>
+<span id="hint">Type 'FAQs' to display the list of questions or click <a href="/Gcreateqn">here</a> to submit your question!</span>
+  <div id="container" class="container">
+    <div id="chat" class="chat">
+    <div id="messages" class="messages"></div>
+    <div class="grid-container">
+      <div>
+    <input type="text" id="input" placeholder="Write something..." autocomplete="off" autofocus="true" /></div>
+      <div>
+    <button onclick="document.getElementById('input').value = ''" id="clear">Clear</button></div>
+    </div>
+    </div>
+  </div><br><br>
+
+
+<style>
+#logo {
+  padding: 15px;
+}
+
+#clear {
+    border-style: solid;
+	padding: 15px;
+	color: #C49D8A;
+	float: right;
+	background: white;
+	border-radius: 10px;
+	border-color: #C49D8A;
+	width: 100px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+	height: 100%;
+}
+
+span {
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+.container {
+	display: flex;
+    justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	background-color: #F6F4F4;
+	padding: 10px;
+}
+
+.chat {
+	height: 500px;
+	width: 2200px;
+	display: flex;
+	flex-direction: column;
+    justify-content: center;
+	align-items: center;
+}
+
+::-webkit-input-placeholder {
+	color: #C49D8A;
+}
+
+input {
+    border-style: solid;
+	padding: 15px;
+	color: #C49D8A;
+	margin-right: auto;
+	border-radius: 10px;
+	border-color: #C49D8A;
+	width: 1200px;
+}
+
+.messages {
+	display: flex;
+	flex-direction: column;
+	overflow: scroll;
+	height: 90%;
+	width: 100%;
+	background-color: #F6F4F4;
+	padding: 15px;
+	color: white;
+	margin: 15px;
+	border-radius: 10px;
+}
+
+#bot {
+	margin-right: auto;
+}
+
+#user {
+	margin-left: auto;
+}
+
+.user.response {
+	font-family: Consolas, 'Courier New', Menlo, source-code-pro, Monaco,
+	monospace;
+	display: flex;
+	align-items: center;
+	margin: 1%;
+	background-color: #C49D8A;
+	padding: 15px;
+	border-radius: 30px;
+	max-width: 50%;
+}
+
+.bot.response {
+	font-family: Consolas, 'Courier New', Menlo, source-code-pro, Monaco,
+	monospace;
+	display: flex;
+	align-items: center;
+	margin: 1%;
+	background-color: #6996B6;
+	padding: 15px;
+	border-radius: 30px;
+	max-width: 50%;
+}
+
+.agent {
+	font-family: Consolas, 'Courier New', Menlo, source-code-pro, Monaco,
+	monospace;
+	color: #947667;
+}
+
+#hint {
+	font-family: Consolas, 'Courier New', Menlo, source-code-pro, Monaco,
+	monospace;
+	color: #947667;
+	padding: 175px;
+}
+
+.top {
+    display: block;
+    padding-top: 10px;
+    padding-left: 90px;
+}
+</style>
+
+<script>
+const inputField = document.getElementById("input");
+inputField.addEventListener("keydown", (e) => {
+  if (e.code === "Enter") {
+    let input = inputField.value;
+    inputField.value = "";
+    output(input);
+  }
+});
+
+function output(input) {
+  let product;
+  let text = input.toLowerCase().replace(/[^\w\s\d]/gi, "");
+  text = text
+    .replace(/ a /g, " ")
+    .replace(/whats/g, "what is")
+    .replace(/please /g, "")
+    .replace(/ please/g, "")
+    .replace(/r u/g, "are you");
+
+  if (compare(utterances, answers, text)) {
+    // Search for exact match in triggers
+    product = compare(utterances, answers, text);
+  }
+  else {
+    product = alternatives[Math.floor(Math.random() * alternatives.length)];
+  }
+
+  addChatEntry(input, product);
+}
+
+function compare(utterancesArray, answersArray, string) {
+  let reply;
+  let replyFound = false;
+  for (let x = 0; x < utterancesArray.length; x++) {
+    for (let y = 0; y < utterancesArray[x].length; y++) {
+      if (utterancesArray[x][y] === string) {
+        let replies = answersArray[x];
+        reply = replies[Math.floor(Math.random() * replies.length)];
+        replyFound = true;
+        break;
+      }
+    }
+    if (replyFound) {
+      break;
+    }
+  }
+  return reply;
+}
+
+function addChatEntry(input, product) {
+  const messagesContainer = document.getElementById("messages");
+  let userDiv = document.createElement("div");
+  userDiv.id = "user";
+  userDiv.className = "user response";
+  userDiv.innerHTML = `<span>${input}</span>`;
+  messagesContainer.appendChild(userDiv);
+
+  let botDiv = document.createElement("div");
+  let botText = document.createElement("span");
+  botDiv.id = "bot";
+  botDiv.className = "bot response";
+  botText.innerText = "Typing...";
+  botDiv.appendChild(botText);
+  messagesContainer.appendChild(botDiv);
+
+  messagesContainer.scrollTop =
+    messagesContainer.scrollHeight - messagesContainer.clientHeight;
+
+  setTimeout(() => {
+    botText.innerText = `${product}`;
+  }, 2000);
+}
+
+const utterances = [
+
+  ["how are you", "how is life", "how are things"],
+  ["hi", "hey", "hello", "good morning", "good afternoon"],
+  [
+    "your name please",
+    "your name",
+    "may i know your name",
+    "what is your name",
+    "what call yourself"
+  ],
+  ["List of FAQs", "faqs"],
+  ["1"],
+  ["2"],
+  ["3"],
+  ["4"],
+  ["5"],
+  ["6"],
+  ["7"],
+  ["8"],
+  ["bye", "good bye", "goodbye", "see you later"],
+  [""],
+];
+
+// Possible responses corresponding to triggers
+
+const answers = [
+   [
+    "Fine... how are you?",
+    "Pretty well, how are you?",
+    "Fantastic, how are you?"
+  ],
+  [
+    "Hello!", "Hi!", "Hey!", "Hi there!", "Howdy"
+  ],
+  ["They call me Helpful Bot 101!"],
+  ["1) Whats the class size?  2) What qualifications do your teachers have?  3) Do you offer trial lessons?  4) Do we need to pay a deposit fee?  5) What subjects do you offer?  6) How much are the tuition fees?  7) What is the duration of each lesson?  8) Will I  get any feedback on the progress of my child throughout the whole programme?"],
+  ["We accept maximum 10 students per class so that our teacher will be able to attend to all students."],
+  ["Our teachers have undergone trainings at National Institute of Education (NIE)"],
+  ["Yes we do! Parents who are interested to sign their children up for trial lesson can contact us at +65 1234 5678 to make the arrangements."],
+  ["Definitely not! Parents need not pay a deposit fee, they will only be required to pay annually."],
+  ["We offer all the Primary School Leaving Examinations (PSLE) subjects - English, Math, Science & Chinese."],
+  ["The tuition fees vary. "],
+  ["Each lesson will be 2 hours long."],
+  ["Yes, parents will receive a report on their child's progress at the end of each review."],
+  ["Bye", "Goodbye", "See you later"],
+  ["Please say something :("]
+];
+
+// Random for any other user input
+
+const alternatives = [
+  "Sorry, I am unable to understand you. You can contact us at our hotline +65 1234 5678, send an email to edugrowlc@gmail.com! We will get back to you as soon as possible :)",
+];
+
+</script>
+
+{% endblock %}

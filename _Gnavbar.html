@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-sm navbar-custom navbar-default sticky-top">
+  <div class="container-fluid" id="bar">
+    <a class="navbar-brand" href="/"><img src="../static/images/edugrow.png" width="50" height="50"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="design">
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+          <a class="nav-link" role="button" data-bs-toggle="dropdown" href="/" id="login">Login</a>
+           <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/studentHomePage">I am a Student</a></li>
+            <li><a class="dropdown-item" href="/teacherHomePage">I am a Teacher</a></li>
+           </ul>
+        </li>
+      </ul>
+    </div>
+    </div>
+  </div>
+</nav>
+
+<style>
+main {
+    height: 2000px;
+}
+
+.navbar-custom {
+    background-color: #4A6F8F;
+}
+
+#col {
+    color: white;
+    padding-right: 50px;
+    }
+
+#design {
+    float: right;
+}
+
+.fixed-nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 100%;
+    height: 50px;
+}
+
+#login {
+    background: #FEC164;
+    border-radius: 30px;
+    padding: 13px 45px 13px 45px;
+    color: white;
+    font-family: helvetica, sans-serif;
+    font-weight: bold;
+}
+</style>

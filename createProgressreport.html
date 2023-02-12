@@ -1,0 +1,170 @@
+{% extends "Tbase.html" %}
+{% block title %}Edugrow - Create Progress Report{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<!-- CSS-->
+<style type=""></style>
+<style type="text/css">
+#contain {
+  color: #947261;
+  background-color: #f6f4f4;
+  border-radius: 30px;
+  font-family: helvetica, sans-serif;
+  font-weight: bold;
+  font-size:20px;
+}
+
+.head {
+    padding-top: 10px;
+}
+
+#title {
+    margin: auto;
+    background: #947667;
+    border-radius: 30px;
+    color: gold;
+    font-family: helvetica, sans-serif;
+    font-weight: bold;
+    padding: 10px;
+    width: 650px;
+}
+
+#form_label{
+  color: black;
+  font-family: helvetica, sans-serif;
+  font-weight: bold;
+  font-size:20px;
+  border-radius: 0px;
+}
+
+/* Hide the default radio button */
+input[type='radio'].star-icon {
+    display: none;
+}
+
+/* Create the star icon */
+input[type='radio'].star-icon + label:before {
+    content: "\e838";
+    font-family: 'Material Icons';
+    font-size: 30px;
+    color: #C0C0C0;
+}
+
+/* Change the color of the star when checked */
+input[type='radio'].star-icon:checked + label:before {
+  color: #fd4;
+}
+
+.container .star-icon input{
+  display: none;
+}
+
+.star-icon label{
+  font-size: 40px;
+  color: #444;
+  padding: 10px;
+  float: left;
+  transition: all 0.2s ease;
+}
+
+input[type='radio']:not(:checked) ~ label:hover,
+input[type='radio']:not(:checked) ~ label:hover ~ label{
+  color: #fd4;
+}
+
+input:checked ~ label{
+  color: #fd4;
+}
+input#overall_ratings-4:checked ~ label{
+  color: #fe7;
+  text-shadow: 0 0 20px #952;
+}
+#overall_ratings-4:checked ~ form header:before{
+  content: "I just hate it ";
+}
+#overall_ratings-3:checked ~ form header:before{
+  content: "I don't like it ";
+}
+#overall_ratings-2:checked ~ form header:before{
+  content: "It is awesome ";
+}
+#overall_ratings-1:checked ~ form header:before{
+  content: "I just like it ";
+}
+#overall_ratings-0:checked ~ form header:before{
+  content: "I just love it ";
+}
+
+.btn {
+<!--  background-color: #93d3c9;-->
+<!--  color: black;-->
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+<div class="row no gutters ">
+    <div class="col-8 border " id="contain" style="margin-top: 20px; margin-left: 260px; margin-right: 0px;">
+            <div class="head">
+                <h4 class="display-4" id="title">Create Progress Report</h4>
+            </div>
+            <form method="POST" action=""
+                  style="width: 900px; margin-top: 20px; margin-left: 100px; margin-right: 0px;">
+                <div class="row">
+                    <div class="col-10">
+                        <div class="form-group">
+                            <div class="">
+                                <!--                            {{ form.first_name.label(class="form-label my-other-class", style="color:red; ") }}-->
+                                {{ form.first_name(placeholder="First Name", style="color: black;") }}
+                                <!--                            {{ form.last_name.label(class="form-label my-other-class", style="color:red;") }}-->
+                                {{ form.last_name(placeholder="Last Name", style="color: black;") }}
+                            </div>
+                            <br>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="">
+                                {{ form.comments.label(class="form-control", id="form_label", style="background-color: #8a97d9; text-align: center;") }}
+                                {{ form.comments(style="width: 100%; height: 100%;") }}
+                            </div>
+                            <br>
+                        </div>
+
+                        <div class="form-group">
+                            <div>
+                                {{ form.overall_ratings.label(class="form-label radio-inline") }}
+                                <!--Making radio-line-->
+                                {% for subfield in form.overall_ratings %}
+                                {{ subfield }}
+                                {{ subfield.label }}
+                                {% endfor %}
+                                <!--                            {{ form.overall_ratings.label(class="form-label star-widget", style="list-style-type: none") }}-->
+                                <!--                            {{ form.overall_ratings(style="list-style-type: none; padding-left: 0px") }}-->
+                            </div>
+                        </div>
+
+                        <input type="submit" value="Submit" class="btn btn-success"/>
+                    </div>
+                </div>
+            </form>
+    </div>
+</div><br><br>
+
+
+{% endblock %}
+

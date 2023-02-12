@@ -1,0 +1,724 @@
+{% extends "Tbase.html" %}
+{% block title %}Edugrow - Teacher Home Page{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- CSS -->
+<link rel="stylesheet" href="static/css/">
+<style type="text/css">
+*{
+
+}
+
+.card {
+  background-color: #fff1bf;
+  border-radius: 25px;
+}
+
+.card-title{
+    font-weight: bold;
+    font-family: Verdana, sans-serif;
+    font-size: 15px;
+}
+
+.card-title, th {
+    font-size: 25px;
+    color: #1a4789;
+}
+
+.card-title1{
+    font-size: 18px;
+    color: black
+}
+
+#card-titleS{
+    font-size: 25px;
+}
+
+#searchGrade {
+  background-color: #d9d9d9;
+  color: #996247;
+}
+
+#grade_table, table {
+  border-collapse: collapse;
+}
+
+<!--#grade_table {-->
+<!--  margin-top: 10px;-->
+<!--}-->
+
+<!--#grade_table tbody tr{-->
+<!--  padding: 10px;-->
+<!--}-->
+
+#grade_table tbody tr:hover{
+  background-color: #996247;
+}
+
+#grade_tableS th{
+    font-size: 15px;
+    color: black;
+}
+
+#grade_tableS div{
+    font-size: 13px;
+    color: black;
+}
+
+.nav{
+    font-size: 30px;
+}
+
+.nav-link{
+    color: #a6a6a6;
+    background-color: #d9d9d9d;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: grey;
+}
+
+.nav-pills .nav-link{
+    text: #a6a6a6;
+    background: #d9d9d9;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+    color: #1a4789;
+    background-color: #fec164;
+}
+
+.nav #nav-link_S{
+    font-size: 15px;
+    padding: 3px;
+    font-weight: bold;
+}
+
+.innercontainer {
+    background: #F6F4F4;
+    border-radius: 20px;
+    width: 100%;
+    padding: 10px;
+    margin: 10px;
+}
+
+.innercontainerS{
+    border-radius: 20px;
+    width: 100%;
+    margin: 10px;
+    padding: 0px;
+}
+
+.unchecked {
+  color: #C0C0C0;
+}
+
+.checked {
+  color:  #fd4;
+  text-shadow: 0 0 20px #952;
+}
+
+#text {
+  font-family: Verdana, sans-serif;
+  color: #947667;
+  font-size: 15px;
+  text-align: left;
+  padding: 30px 0px 40px 0px;
+}
+
+#text2 {
+  font-family: Verdana, sans-serif;
+  color: #947667;
+  font-size: 15px;
+  border-radius: 15px;
+}
+
+.btn {
+  border: 1px solid #D9D9D8;
+  background: #D9D9D8;
+  color: #947667;
+  padding: 14px 28px;
+  font-size: 15px;
+  border-radius: 15px;
+}
+
+.btn-group-sm>.btn, .btn-sm{
+     margin-top: 10px;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<h2 style="padding-top: 10px; color: pink; " id="today">Today,
+    <span id="myClockDisplay" class="clock"></span>
+    <span id="myDateDisplay"></span>
+</h2>
+
+<div class="row no gutters">
+    <div class="col-4">
+        <div class="card" style="width: 400px; min-height: 510px; margin-top: 20px; margin-left: 67px; margin-right: 30px;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    Announcement
+                    <!--Link-->
+                    <a href="/createAnnouncement"
+                       style="text-decoration: none; font-size: 14px; color: #737373; float:right">Create</a>
+                </h5>
+                <div class="card-text" id="announcement" style=" ">
+                    <div>
+                        {% for announcement in announcements_list %}
+                        <div class="card"
+                             style="width: 340px; border-radius: 15px; margin-top: 0px; margin-bottom: 20px; margin-left: 0px; margin-right: 0px; background-color: #f6f4f4;">
+                            <div class="card-body" style="padding: 10px 16px 10px 16px; ">
+                                {% for user in users_list %}
+                                {% if user.get_announcement_descriptions() | length > 2  %}
+                                    <span>{{ user.get_user_id() }} {{ user.get_last_name() }}</span>
+                                {% endif %}
+                                {% endfor %}
+                                <h5 class="card-title1" style="color: #ca9d8a;">
+                                    <div> <span id="card-titleS">Dear students,</span> </div>
+                                </h5>
+                                <p class="card-text" style="padding: 0px;">
+                                <div id="card-text1">
+                                    <div class="align-top text-break">{{ announcement.get_announcement_descriptions() }}
+                                    </div>
+                                    <div class="align-top" style="padding-top: 15px; font-weight: bold;">{{
+                                        announcement.get_salutation()}} {{announcement.get_tutor_full_name()}}
+                                        <span class=" lead" style="font-size: 12px;">Posted on {{announcement.get_created_datetime()}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-8">
+        <div class="row no-gutters">
+            <div class="col-6">
+                <div class="card" style="width: 400px; margin-top: 20px; margin-left: 30px; margin-right: 30px;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Progress reports
+                            <!-- Link trigger modal -->
+                            <a href="#" style="text-decoration: none; font-size: 20px; color: #737373; float:right"
+                               class="align-bottom"
+                               data-bs-toggle="modal"
+                               data-bs-target="#staticBackdrop_pr">></a>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop_pr" data-bs-backdrop="static"
+                                 data-bs-keyboard="false"
+                                 tabindex="-1" aria-labelledby="staticBackdrop_prLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                     style="max-width: 90%; max-height: 90%;">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdrop_prLabel">Progress Report</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    data-show-modal="infoModal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Nav pills -->
+                                            <ul class="nav nav-pills nav-justified" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" data-bs-toggle="pill" href="#Complete">Complete</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-bs-toggle="pill" href="#Incomplete">Incomplete</a>
+                                                </li>
+                                            </ul>
+
+                                            <!-- Tab panes -->
+                                            <div class="tab-content">
+                                                <div id="Complete" class="container innercontainer tab-pane active"><br>
+                                                    <table class="table table-hover">
+                                                        <thead id="text">
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>First Name</th>
+                                                            <th>Last Name</th>
+                                                            <th>Comments</th>
+                                                            <th>Overall Ratings</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for progressreport in progressreports_list %}
+                                                        {% if progressreport.get_overall_ratings() | int > 0 %}
+
+                                                        <tr style="background-color: #c9dbbe;">
+                                                            {% for user in users_list %}
+                                                            {% if user.get_overall_ratings() | int > 0 %}
+                                                            <td>{{ user.get_user_id() }}</td>
+                                                            {% endif %}
+                                                            {% endfor %}
+                                                            <td>{{ progressreport.get_first_name() }} </td>
+                                                            <td>{{ progressreport.get_last_name() }}</td>
+                                                            <td>{{ progressreport.get_comments() }}</td>
+                                                            <td>{{ progressreport.get_overall_ratings() }} <span
+                                                                    class="fa fa-star checked"></span></td>
+
+                                                            <td>
+                                                                <a href="/updateProgressreport/{{progressreport.get_progressreport_id()}}"
+                                                                   class="btn btn-warning"
+                                                                   style="color: #737373; font-size: 17 px;"><i class="fa fa-edit"></i> </a></td>
+                                                            <td>
+                                                                <form action="{{url_for('delete_progressreport', id=progressreport.get_progressreport_id())}}"
+                                                                      method="POST">
+                                                                    {# <input type="submit" value="Delete"
+                                                                              class="btn btn-danger"
+                                                                              onclick="return confirm('Are you sure you want to delete {{progressreport.get_first_name()}} {{progressreport.get_last_name()}}
+                                       {{progressreport.get_comments()}} {{ progressreport.get_overall_ratings() }}?');">#}
+                                                                    <!-- Button to Open the Modal -->
+                                                                    <button type="button"
+                                                                            class="btn btn-danger showdeletemodal"
+                                                                            data-show-modal="myModal_{{progressreport.get_progressreport_id()}}">
+                                                                        Delete
+                                                                    </button>
+
+                                                                    <!-- The Modal -->
+                                                                    <div class="modal"
+                                                                         id="myModal_{{progressreport.get_progressreport_id()}}"
+                                                                         tabindex="-1"
+                                                                         aria-labelledby="infoModalLabel"
+                                                                         aria-hidden="true"
+                                                                         data-bs-backdrop="static">
+                                                                        <div class="modal-dialog">
+                                                                            <div class="modal-content">
+
+                                                                                <!-- Modal Header -->
+                                                                                <div class="modal-header">
+                                                                                    <h4 class="modal-title">Delete
+                                                                                        Confirmation</h4>
+                                                                                    <button type="button"
+                                                                                            class="btn-close"
+                                                                                            data-bs-dismiss="modal"></button>
+                                                                                </div>
+
+                                                                                <!-- Modal body -->
+                                                                                <div class="modal-body">
+                                                                                    Are you sure you want to delete
+                                                                                    {{progressreport.get_first_name()}}
+                                                                                    {{progressreport.get_last_name()}}
+                                                                                    {{progressreport.get_comments()}} {{
+                                                                                    progressreport.get_overall_ratings()
+                                                                                    }}?
+                                                                                </div>
+
+                                                                                <!-- Modal footer -->
+                                                                                <div class="modal-footer">
+                                                                                    <input type="submit" value="Delete"
+                                                                                           class="btn btn-danger"
+                                                                                           data-bs-dismiss="modal">
+                                                                                    <button type="button"
+                                                                                            class="btn btn-secondary"
+                                                                                            data-bs-dismiss="modal">
+                                                                                        Cancel
+                                                                                    </button>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div id="Incomplete" class="container innercontainer tab-pane fade"><br>
+                                                    <table class="table table-hover">
+                                                        <thead id="text">
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>First Name</th>
+                                                            <th>Last Name</th>
+                                                            <th>Level</th>
+                                                            <th>Subject</th>
+                                                            <th>Comments</th>
+                                                            <th>Overall Ratings</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for user in users_list %}
+                                                        {% if user.get_overall_ratings() | int <= 0 %}
+                                                        <tr style="background-color: #fff1bf;">
+                                                            <td>{{ user.get_user_id() }}</td>
+                                                            <td>{{ user.get_first_name() }}</td>
+                                                            <td>{{ user.get_last_name() }}</td>
+                                                            <td>{{ user.get_level() }}</td>
+                                                            <td>{{ user.get_subject() }}</td>
+                                                            <td></td>
+                                                            <td>
+                                                                <span class="fa fa-star unchecked"></span>
+                                                                <span class="fa fa-star unchecked"></span>
+                                                                <span class="fa fa-star unchecked"></span>
+                                                                <span class="fa fa-star unchecked"></span>
+                                                                <span class="fa fa-star unchecked"></span>
+                                                            </td>
+                                                            <td>
+                                                                <a href="/createProgressreport">
+                                                                    <button type="button" class="btn btn-warning"
+                                                                            style="color: #996247">Write
+                                                                        <!--                                                            onclick="myFunction()"-->
+                                                                    </button>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </h5>
+                        <div class="card-text" style="height: 263px; overflow: hidden;">
+
+                            <div>
+                                <!-- Nav pills -->
+                                <ul class="nav nav-pills nav-justified" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-bs-toggle="pill" id="nav-link_S"
+                                           href="#Completes">Complete</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-bs-toggle="pill" id="nav-link_S" href="#Incompletes">Incomplete</a>
+                                    </li>
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div id="Completes" class="container innercontainerS tab-pane active">
+                                        {% for progressreport in progressreports_list %}
+                                        <div class="card"
+                                             style="width: 345px; border-radius: 15px; margin-top: 0px; margin-bottom: 10px; margin-left: 0px; margin-right: 0px; padding: 0px; background-color: #f6f4f4; ">
+                                            <div class="card-body" style="padding: 10px 16px 10px 16px; ">
+                                                <!--                            <h5 class="card-title"> </h5>-->
+                                                <div class="card-text" style="padding: 0px;">
+                                                    <div>
+                                                        {% if progressreport.get_overall_ratings() | int > 0 %}
+
+                                                        <div style="font-size: 15px;">
+                                                            <div>
+                                                                {{ progressreport.get_first_name() }} {{ progressreport.get_last_name() }}
+                                                                <div class="align-top" style="float:right; font-size: 16px;"> {{ progressreport.get_overall_ratings() }} <span class="fa fa-star checked"></span></div>
+                                                            </div>
+                                                        </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+
+                                    <div id="Incompletes" class="container innercontainerS tab-pane fade">
+                                        {% for user in users_list %}
+                                        {% if user.get_overall_ratings() | int <= 0 %}
+                                        <div class="card"
+                                             style="width: 345px; border-radius: 15px; margin-top: 0px; margin-bottom: 10px; margin-left: 0px; margin-right: 0px; padding: 0px; background-color: #f6f4f4; ">
+                                            <div class="card-body" style="padding: 0px 16px 10px 16px;">
+                                                <h5 class="card-title"> </h5>
+                                                <div class="card-text" style="padding: 0px; ">
+                                                    <div id="grade_tableS">
+                                                        <div>
+                                                            <div>
+                                                                {{ user.get_user_id() }}&nbsp;
+                                                                {{ user.get_first_name() }}
+                                                                {{ user.get_last_name() }}
+                                                                <span class="align-top"
+                                                                      style="float:right; font-size: 16px;">
+                                                                    <span class="fa fa-star unchecked align-bottom"></span>
+                                                                    <span class="fa fa-star unchecked align-bottom "></span>
+                                                                    <span class="fa fa-star unchecked align-bottom"></span>
+                                                                    <span class="fa fa-star unchecked align-bottom"></span>
+                                                                    <span class="fa fa-star unchecked align-bottom"></span>
+                                                                </span>
+                                                            </div>
+                                                            <div>Level: {{ user.get_level() }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card" style="width: 400px; margin-top: 20px; margin-left: 20px; margin-right: 20px;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Students Grades
+                            <!-- Link trigger modal -->
+                            <a href="#" style="text-decoration: none; font-size: 14px; color: #737373; float:right"
+                               data-bs-toggle="modal"
+                               data-bs-target="#staticBackdrop_sg">View All</a>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop_sg" data-bs-backdrop="static"
+                                 data-bs-keyboard="false"
+                                 tabindex="-1" aria-labelledby="staticBackdrop_sgLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                     style="max-width: 90%; max-height: 90%;">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdrop_sgLabel">Grade Report</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div>
+                                                <form method="POST" action="{{ url_for('searchGrade') }}"
+                                                      class="d-flex">
+                                                    <input class="form-control me-2" type="search" id="searchGrade"
+                                                           onkeyup="searchFunction()" placeholder="Search"
+                                                           aria-label="Search">
+                                                </form>
+                                                <div>
+                                                    <table class="table  table-hover" id="grade_table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>ID Student Name</th>
+                                                            <th>Percentage</th>
+                                                            <th>Grade</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for grade in grades_list %}
+                                                        <tr style="background-color: #c49d8a;">
+                                                        {% for user in users_list %}
+                                                        {% if user.get_grade() | int > 0 %}
+                                                            <td>{{ user.get_user_id() }} &nbsp; {{ user.get_first_name() }}</td>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        {% if grade.get_grade() | int > 0 %}
+<!--                                                            s-->
+                                                            <td>{{ grade.get_percentage() }}</td>
+                                                            <td>{{ grade.get_grade() }}</td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </table>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </h5>
+                        <div class="card-text" style="height: 263px; overflow: hidden;">
+                            <div>
+                                <table class="table table-hover" id="grade_tableS">
+                                    <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Percentage</th>
+                                        <th>Grade</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for grade in grades_list %}
+                                    <tr style="background-color: #c49d8a; font-size: 13px;">
+                                        {% for user in users_list %}
+                                        {% if user.get_grade() | int > 0 %}
+                                            <td>{{ user.get_first_name() }} {{ user.get_last_name() }}</td>
+                                        {% endif %}
+                                        {% endfor %}
+                                        <td>{{ grade.get_percentage() }}</td>
+                                        <td>{{ grade.get_grade() }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row no gutters">
+            <div class="col-12">
+                <div class="card" style="width: 903px; margin-top: 50px; margin-left: 25px; margin-right: 60px;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Contents
+                        </h5>
+                        <div class="card-text">
+                            <div class="d-grid gap-2 d-md-block text-center">
+                                <a class="btn btn-primary"href="/createQuiz" role="button">Create New Quiz</a>
+                                <a class="btn btn-primary" href="/createGrade" role="button">Enter Grades</a>
+                                <a class="btn btn-primary" href="#" role="button">Re</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row" style="margin-top: 20px;">
+
+    <!--    <div class="card" style="width: 400px; margin-left: 120px; margin-right: 20px;">-->
+    <!--        <div class="card-body">-->
+    <!--            <h5 class="card-title">-->
+    <!--                Upcoming classes-->
+    <!--            </h5>-->
+    <!--            <div class="card-text">-->
+
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+
+    <!--    <div class="card" style="width: 850px; margin-left: 30px;">-->
+    <!--        <div class="card-body">-->
+    <!--            <h5 class="card-title">-->
+    <!--                Content-->
+    <!--            </h5>-->
+    <!--            <div class="card-text">-->
+
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+
+</div>
+
+<!--display today time and date-->
+<script>
+<!--n =  new Date();-->
+<!--y = n.getFullYear();-->
+<!--m = n.getMonth() + 1;-->
+<!--d = n.getDate();-->
+<!--document.getElementById("date").innerHTML = m + "/" + d + "/" + y;-->
+
+function showTime() {
+    var timediv = document.getElementById("myClockDisplay");
+    var datediv = document.getElementById("myDateDisplay");
+    var dt = new Date();
+    var d = dt.getDate();
+    var m = dt.getMonth() + 1; // getMonth() returns the month "index" starting with 0 for Jan
+    var y = dt.getFullYear();
+    var hh = dt.getHours();
+    var mm = dt.getMinutes();
+    var ss = dt.getSeconds();
+    var session = "AM";
+    if (hh == 0) {
+        hh = 12;
+    }
+
+    if (hh > 12) {
+        hh = hh - 12;
+        session = "PM";
+    }
+
+    d = (d < 10) ? "0" + d : d;
+    m = (m < 10) ? "0" + m : m;
+    hh = (hh < 10) ? "0" + hh : hh;
+    mm = (mm < 10) ? "0" + mm : mm;
+    ss = (ss < 10) ? "0" + ss : ss;
+    timediv.textContent = hh + ":" + mm + ":" + ss + " " + session;
+    datediv.textContent = m + "/" + d + "/" + y;
+    setTimeout(showTime, 1000);
+}
+
+showTime();
+</script>
+
+<script>
+function myFunction() {
+  const hide_row = document.getElementsByClassName("hide_row");
+  for (let i = 0; i < hide_row.length; i++) {
+  hide_row[i].style.display = "none";
+  }
+}
+
+
+
+Array.from(document.getElementsByClassName('showdeletemodal')).forEach( (e) => {
+  e.addEventListener('click', function(element) {
+    element.preventDefault();
+    if (e.hasAttribute('data-show-modal')) {
+      showdeletemodal(e.getAttribute('data-show-modal'));
+    }
+  });
+});
+// Show modal dialog
+function showdeletemodal(modal) {
+  const mid = document.getElementById(modal);
+  let myModal = new bootstrap.Modal(mid);
+  myModal.show();
+}
+
+
+
+
+
+
+
+</script>
+<script>
+function searchFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("searchGrade");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("grade_table");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+
+    for (j =0; j<4; j++){
+        td = tr[i].getElementsByTagName("td")[j];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+            break;
+          }
+          else {
+            tr[i].style.display = "none";
+          }
+        }
+    }
+
+  }
+}
+
+
+
+
+
+
+
+</script>
+{% endblock %}

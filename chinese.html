@@ -1,0 +1,213 @@
+{% extends "Gbase.html" %}
+{% block title %}Edugrow - Chinese {% endblock %}
+{% block content %}
+<style>
+
+    .quotes {
+  display: inline-block;
+  margin-right: 10px;
+  position:relative;
+  top:5px;
+  }
+  h4 {
+  padding:40px;
+  }
+  th {
+  padding:20px;
+  }
+  .masthead {
+  padding-top:0px;
+  padding-bottom:6rem;
+}
+
+.masthead .masthead-heading {
+  font-size: 2.75rem;
+  line-height: 2.75rem;
+  color:black;
+}
+.masthead .masthead-subheading {
+  font-size: 1.25rem;
+  color:black;
+}
+.masthead .masthead-avatar {
+  width: 15rem;
+}
+
+@media (min-width: 992px) {
+  .masthead {
+    padding-top: calc(6rem + 104px);
+    padding-bottom: 6rem;
+  }
+  .masthead .masthead-heading {
+    font-size: 4rem;
+    line-height: 3.5rem;
+  }
+  .masthead .masthead-subheading {
+    font-size: 1.5rem;
+  }
+
+  .bg-pri {
+  background-image: url('../static/images/classroom.jpg')
+  }
+.page-section {
+  padding: 6rem 0;
+}
+.page-section .page-section-heading {
+  font-size: 2.25rem;
+  line-height: 2rem;
+}
+@media (min-width: 992px) {
+  .page-section .page-section-heading {
+    font-size: 3rem;
+    line-height: 2.5rem;
+  }
+}
+.portfolio .portfolio-item {
+  cursor: pointer;
+  position: relative;
+  display: block;
+  max-width: 25rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.portfolio .portfolio-item .portfolio-item-caption {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 0.2s ease-in-out;
+  opacity: 0;
+  background-color: rgba(220,220,220,0.9);
+}
+.portfolio .portfolio-item .portfolio-item-caption:hover {
+  opacity: 1;
+}
+.portfolio .portfolio-item .portfolio-item-caption .portfolio-item-caption-content {
+  font-size: 1.5rem;
+}
+
+.portfolio-modal .btn-close {
+  color: #1abc9c;
+  font-size: 2rem;
+  padding: 1rem;
+}
+.portfolio-modal .portfolio-modal-title {
+  font-size: 2.25rem;
+  line-height: 2rem;
+}
+@media (min-width: 992px) {
+  .portfolio-modal .portfolio-modal-title {
+    font-size: 3rem;
+    line-height: 2.5rem;
+  }
+}
+
+.btn{
+  border: 1px solid #D9D9D8;
+  background: #D9D9D8;
+  color: #947667;
+  padding: 14px 28px;
+  font-size: 15px;
+  border-radius: 15px;
+}
+</style>
+<header class="masthead bg-pri text-white text-center" style="padding-top:7%;">
+            <div class="container d-flex align-items-center flex-column" style=" background: rgba(220,220,220,0.5);" >
+                <!-- Masthead Avatar Image-->
+                <img class="masthead-avatar mb-5" src="../static/images/edugrow.png" alt="..." />
+                <!-- Masthead Heading-->
+                <h1 class="masthead-heading text-uppercase mb-0">English</h1>
+                <!-- Icon Divider-->
+                <div class="divider-custom divider-light">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+                <!-- Masthead Subheading-->
+                <p class="masthead-subheading font-weight-light mb-0">Only The Best</p>
+            </div>
+        </header>
+<section class="page-section text-white mb-0" id="about" style="background-color:#F4F4F4">
+            <div class="container" style="background:none;">
+                <!-- About Section Heading-->
+                <h2 class="page-section-heading text-center text-uppercase text-black" style="margin-bottom:10%;">Our Teachers</h2>
+                <!-- About Section Content-->
+                <div class="row">
+                    <div class="col-lg-4 ms-auto text-black"><img style='max-size:10vh; max-width:10vw; display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;' src="../static/images/male-teacher.png"><h3 class="text-center">Daryl Peh</h3><p class="lead">Mr Dareal has over 23 years of experience in the industry and not one of his students have graduated from Edugrow Learning Center without having nothing but praise for him. He specialises in teaching younger students the fundamentals of the English language.</p></div>
+                    <div class="col-lg-4 me-auto text-black"><img style='max-size:10vh; max-width:10vw;display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;' src="../static/images/male-teacher2.png"><h3 class="text-center">Tan Chee Meng</h3><p class="lead">Mr Tan is fresh to the teaching industry but has recognised qualifications such as a doctorate in creative writing. His students have statistically improved under his guidance and he is perfect if your child is in need of help.</p></div>
+                </div>
+                <!-- About Section Button-->
+            </div>
+        </section>
+        <section class="page-section portfolio" id="portfolio">
+            <div class="container" style="background:none;">
+                <!-- Portfolio Section Heading-->
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Testimonials</h2>
+                <!-- Icon Divider-->
+
+                <!-- Portfolio Grid Items-->
+                <div class="row justify-content-center" style="margin-top:10%;">
+                    <!-- Portfolio Item 1-->
+                    <div class="col-md-6 col-lg-4 mb-5">
+                        <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal1">
+                            <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
+                                <div class="portfolio-item-caption-content text-center text-black"><h3 class="text-center">Jovan Goh</h3><p>English lessons with Edugrow has helped me to improve conversational skills as well as my control of the English Language and I ended up scoring an AL1 for PSLE! :)</p></div>
+                            </div>
+                            <img class="img-fluid" src="../static/images/man.png" alt="..." />
+                        </div>
+                    </div>
+                    <!-- Portfolio Item 2-->
+                    <div class="col-md-6 col-lg-4 mb-5">
+                        <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal2">
+                            <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
+                                <div class="portfolio-item-caption-content text-center text-black"><h3 class="text-center">Angie Sin</h3><p>Mr Dareal has very interesting lessons and has a passion for the language like no teacher before him.</p></div>
+                            </div>
+                            <img class="img-fluid" src="../static/images/girl.png" alt="..." />
+                        </div>
+                    </div>
+                    <!-- Portfolio Item 3-->
+                    <div class="col-md-6 col-lg-4 mb-5">
+                        <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal3">
+                            <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
+                                <div class="portfolio-item-caption-content text-center text-black"><h3 class="text-center">Yalini Shunmugam</h3><p>Mr Tan has an amazing command over the langauge and as a result my essay writing has improved tremendously.</p></div>
+                            </div>
+                            <img class="img-fluid" src="../static/images/girl2.png" alt="..." />
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+<section class="page-section" style="background-color:#F4F4F4">
+    <div class="container">
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Class Details</h2>
+        <table class="table table-bordered">
+     <tr>
+        <th><h2>Location</h2></th>
+        <th><h2>Timing</h2></th>
+        <th><h2>Levels Available</h2></th>
+    </tr>
+    <tr>
+        <td><h4>Jurong West</h4></td>
+        <td><h4>Tuesday - 15:00 to 17:00/ Wednesday - 15:00 to 17:00</h4></td>
+        <td><h4>All primary school levels.</h4></td>
+    </tr>
+    <tr>
+        <td><h4>Bishan</h4></td>
+        <td><h4>Monday - 15:00 to 17:00/Thursday - 15:00 to 17:00</h4></td>
+        <td><h4>All primary school levels.</h4></td>
+    </tr>
+</table>
+
+    </div>
+    <center> <a class="btn btn-primary" href="/store" role="button"><h1>SIGN UP</h1></a> </center>
+</section><br><br>
+
+
+    {% endblock %}

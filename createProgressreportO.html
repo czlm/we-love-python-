@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Library Loan System - Create Progress Report{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<!-- CSS-->
+<style type=""></style>
+<style type="text/css">
+/* Hide the default radio button */
+input[type='radio'].star-icon {
+    display: none;
+}
+
+/* Create the star icon */
+input[type='radio'].star-icon + label:before {
+    content: "\e838";
+    font-family: 'Material Icons';
+    font-size: 30px;
+    color: #C0C0C0;
+}
+
+/* Change the color of the star when checked */
+input[type='radio'].star-icon:checked + label:before {
+  color: #fd4;
+}
+
+.container .star-icon input{
+  display: none;
+}
+
+.star-icon label{
+  font-size: 40px;
+  color: #444;
+  padding: 10px;
+  float: left;
+  transition: all 0.2s ease;
+}
+
+input[type='radio']:not(:checked) ~ label:hover,
+input[type='radio']:not(:checked) ~ label:hover ~ label{
+  color: #fd4;
+}
+
+input:checked ~ label{
+  color: #fd4;
+}
+input#overall_ratings-4:checked ~ label{
+  color: #fe7;
+  text-shadow: 0 0 20px #952;
+}
+#overall_ratings-4:checked ~ form header:before{
+  content: "I just hate it ";
+}
+#overall_ratings-3:checked ~ form header:before{
+  content: "I don't like it ";
+}
+#overall_ratings-2:checked ~ form header:before{
+  content: "It is awesome ";
+}
+#overall_ratings-1:checked ~ form header:before{
+  content: "I just like it ";
+}
+#overall_ratings-0:checked ~ form header:before{
+  content: "I just love it ";
+}
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+<h1 class="display-4">Create Progress report</h1>
+<div class="row no gutters">
+    <div class="col-8">
+        <form method="POST" action="" style="width: 900px; margin-top: 20px; margin-left: 300px; margin-right: 20px;">
+            <div class="form-group">
+                {{ render_field(form.first_name, class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ render_field(form.last_name, class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ render_field(form.day, class="form-control", style="list-style-type:none") }}
+            </div>
+            <div class="form-group">
+                {{ render_field(form.start_time, class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ render_field(form.end_time, class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ render_field(form.comments, class="form-control") }}
+            </div>
+            <div class="form-group">
+                <div class="radio-inline star-widget"> {{ render_field(form.overall_ratings, class="star-icon",
+                    style="list-style-type:none") }}
+                </div>
+            </div>
+            <input type="submit" value="Submit" class="btn btn-primary"/>
+        </form>
+    </div>
+</div><br><br>
+{% endblock %}
