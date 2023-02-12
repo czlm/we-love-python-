@@ -30,7 +30,7 @@ def session_handler():
 
 @app.route("/", methods=("GET", "POST"), strict_slashes=False)
 def index():
-    return render_template("index.html",title="Home")
+    return render_template("index3.html",title="Home")
 
 @app.route("/teacher", methods=("GET", "POST"), strict_slashes=False)
 def index1():
@@ -46,7 +46,7 @@ def login():
             user = User.query.filter_by(email=form.email.data).first()
             if check_password_hash(user.pwd, form.pwd.data):
                 login_user(user)
-                return redirect(url_for('index'))
+                return render_template("index.html")
             else:
                 flash("Invalid Username or password!", "danger")
         except Exception as e:
@@ -62,14 +62,14 @@ def login():
 
 
 # Register route
-@app.route("/registerstudent/", methods=("GET", "POST"), strict_slashes=False)
+@app.route("/registerstudent", methods=("GET", "POST"), strict_slashes=False)
 def register():
     form = register_form()
     if form.validate_on_submit():
         try:
+            username = form.username.data
             email = form.email.data
             pwd = form.pwd.data
-            username = form.username.data
 
             newuser = User(
                 username=username,
@@ -100,6 +100,7 @@ def register():
         except BuildError:
             db.session.rollback()
             flash(f"An error occured !", "danger")
+
     return render_template("auth.html",
         form=form,
         text="Create student account",
@@ -220,7 +221,7 @@ def insert():
         db.session.add(my_data)
         db.session.commit()
 
-        flash("Employee Inserted Successfully")
+        flash("Teacher's Inserted Successfully")
 
         return redirect(url_for('Index1'))
 
@@ -237,22 +238,62 @@ def update():
 
         my_data.admin_number = request.form['admin_number']
         my_data.email = request.form['email']
-        my_data.password = request.form['pwd']
+        my_data.pwd = request.form['password']
 
         db.session.commit()
-        flash("Employee Updated Successfully")
+
+        db.session.commit()
+        flash("Teacher's credentials have been updated successfully")
 
         return redirect(url_for('Index1'))
 
-#This route is for deleting our employee
-@app.route('/teacherdelete/<id>/', methods = ['GET', 'POST'])
-def delete(id):
-    my_data = teacher.query.get(id)
-    db.session.delete(my_data)
-    db.session.commit()
-    flash("Employee Deleted Successfully")
+#This is the index route where we are going to query on all our data
+@app.route('/studentaccountmanagement')
+def Index2():
+    all_data = User.query.all()
 
-    return redirect(url_for('Index1'))
+    return render_template("myclass1.html", student = all_data)
+
+
+
+#this route is for inserting data to mysql database via html forms
+@app.route('/studentinsert', methods = ['POST'])
+def insert1():
+
+    if request.method == 'POST':
+
+        name = request.form['name']
+        email = request.form['email']
+        phone = request.form['phone']
+
+
+        my_data = User(name, email, phone)
+        db.session.add(my_data)
+        db.session.commit()
+
+        flash("Student's Inserted Successfully")
+
+        return redirect(url_for('Index2'))
+
+    else:
+        flash("There is an error")
+
+
+#this is our update route where we are going to update our employee
+@app.route('/studentupdate', methods = ['GET', 'POST'])
+def update1():
+
+    if request.method == 'POST':
+        my_data = User.query.get(request.form.get('id'))
+
+        my_data.email = request.form['email']
+        my_data.pwd = request.form['password']
+
+
+        db.session.commit()
+        flash("Student's credentials have been updated successfully")
+
+        return redirect(url_for('Index2'))
 
 @app.route("/logout")
 @login_required
