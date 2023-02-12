@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Library Loan System - Create Customer{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- CSS-->
+<style type="text/css">
+#contain {
+  color: #947261;
+  background-color: #f6f4f4;
+  border-radius: 30px;
+  font-family: helvetica, sans-serif;
+  font-weight: bold;
+  font-size:20px;
+}
+
+.head {
+    padding-top: 10px;
+    float: centre;
+}
+
+#title {
+    margin: auto;
+    background: #947667;
+    border-radius: 30px;
+    color: gold;
+    font-family: helvetica, sans-serif;
+    font-weight: bold;
+    padding: 10px;
+    width: 650px;
+}
+
+#form_label{
+  color: black;
+  font-family: helvetica, sans-serif;
+  font-weight: bold;
+  font-size:20px;
+  border-radius: 0px;
+}
+
+.btn {
+<!--  background-color: #93d3c9;-->
+<!--  color: black;-->
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+
+<div class="row no gutters ">
+    <div class="col-8" id="contain"
+         style="margin-top: 20px; margin-left: 260px; margin-right: 0px;">
+        <div class="head">
+            <h4 class="display-4" id="title">Create Topic</h4>
+        </div>
+        <form method="POST" action=""
+              style="width: 900px; margin-top: 20px; margin-left: 100px; margin-right: 0px;">
+            <div class="row">
+                <div class="col-10">
+                    <div class="form-group">
+                        {{ form.title.label() }}
+                        {{ form.title() }}
+                    </div>
+                    <br>
+
+                    <div class="form-group">
+                        <div class="">
+                            {{ form.content.label(class="") }}
+                            {{ form.content() }}
+                        </div>
+                        <br>
+                    </div>
+
+                    <input type="submit" value="Submit" class="btn btn-success"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
