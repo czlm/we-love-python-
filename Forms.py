@@ -1,74 +1,46 @@
-from wtforms import Form, StringField, RadioField, EmailField, TextAreaField, SelectField, validators
-from wtforms import DecimalField, IntegerField, TimeField, SelectMultipleField, DateField, SubmitField
-from wtforms.fields import DateTimeField, DateTimeLocalField
-from wtforms.validators import DataRequired, ValidationError
 from flask_wtf import FlaskForm
-from datetime import datetime
-from decimal import ROUND_HALF_UP
+from wtforms import Form, StringField, RadioField, DateField, SelectField, TextAreaField, validators, BooleanField, IntegerField
+
+class CreateSubjectForm(Form):
+    title = StringField('Title', [validators.Length(min=1, max=150), validators.DataRequired()])
+    description = StringField('Description', [validators.Length(min=1, max=150), validators.DataRequired()])
+    price = IntegerField('Pricing',[validators.DataRequired()])
+    level = SelectField('Level',
+                         choices=[('', 'Select'), ('1', 'Primary 1'), ('2', 'Primary 2'), ('3', 'Primary 3'), ('4', 'Primary 4'),('5', 'Primary 5'), ('6', 'Primary 6')],
+                         default='')
 
 
-class CreateUserForm(Form):
-    first_name = StringField('First Name', [validators.Length(min=1, max=150), validators.DataRequired()])
-    last_name = StringField('Last Name', [validators.Length(min=1, max=150), validators.DataRequired()])
-    level = SelectField('Choose your Level', [validators.DataRequired()], choices=[('', 'Select'), ('P1', 'Primary 1'), ('P2', 'Primary 2'), ('P3', 'Primary 3'), ('P4', 'Primary 4'), ('P5', 'Primary 5'), ('P6', 'Primary 6')], default='')
+class CreateWithdrawalForm(Form):
+    first_name = StringField('First Name', [validators.length(min=1, max=150), validators.DataRequired()])
+    last_name = StringField('Last Name', [validators.length(min=1, max=150), validators.DataRequired()])
+    level = SelectField('Level',
+                        choices=[('', 'Select'), ('1', 'Primary 1'), ('2', 'Primary 2'), ('3', 'Primary 3'),
+                                 ('4', 'Primary 4'), ('5', 'Primary 5'), ('6', 'Primary 6')],
+                        default='')
+    subject = SelectField('Subject', choices=[('', 'Select'), ('1', 'English'), ('2', 'Math'), ('3', 'Science'),
+                                               ('4', 'Chinese')])
+    reason = StringField('Reason', [validators.length(min=1, max=150), validators.DataRequired()])
+    feedback = StringField('Feedback', [validators.length(min=1, max=150), validators.DataRequired()])
+    ack = RadioField('I am the parent/guardian of the student. Parents will be notified for acknowledgement', choices=[('Yes', 'Yes')])
+
+
+class CreateStudentForm(Form):
+    first_name = StringField('First Name', [validators.length(min=1, max=150), validators.DataRequired()])
+    last_name = StringField('Last Name', [validators.length(min=1, max=150), validators.DataRequired()])
     gender = SelectField('Gender',
                          choices=[('', 'Select'), ('F', 'Female'), ('M', 'Male')],
                          default='')
     email = StringField('Email', [validators.length(min=1, max=150), validators.DataRequired()])
     date_joined = DateField('Date Joined',  [validators.DataRequired()])
     address = StringField('Address')
-    subject = SelectMultipleField('Choose your Subject(s)', [validators.DataRequired()], choices=[('E', 'English'), ('M', 'Math'), ('S', 'Science'), ('C', 'Chinese')], default='')
-    # announcement_descriptions = TextAreaField('Enter descriptions for announcement', [validators.Optional()])
-    announcement_descriptions = StringField(default='nu')
-    # grade = RadioField('Grade', choices=[(0, ''), (1, ''), (2, ''), (3, ''), (4, ''), (5, '')], default='0')
-    grade = IntegerField('Grade for this class', [validators.NumberRange(max=0, message='Key either 1, 2, 3, 4 only'), validators.DataRequired()])
-
-
-    overall_ratings = RadioField('Overall Ratings', choices=[(0, ''), (1, ''), (2, ''), (3, ''), (4, ''), (5, '')], default='0')
-
-
-class CreateGradeForm(Form):
-    first_name = StringField('First Name', [validators.Length(min=1, max=150), validators.DataRequired()])
-    last_name = StringField('Last Name', [validators.Length(min=1, max=150), validators.DataRequired()])
-    topic_no = IntegerField('Enter Topic No', [validators.NumberRange(min=1, max=10, message='1 to 10 only'), validators.DataRequired()])
-    topic_title = StringField('Enter Title', [validators.Length(min=10, max=50), validators.DataRequired()])
-    percentage = DecimalField('Percentage for this class(%)', [validators.NumberRange(min=1, max=100, message='Key in numbers only'), validators.DataRequired()])
-    grade = IntegerField('Grade for this class', [validators.NumberRange(min=1, max=4, message='Key either 1, 2, 3, 4 only'), validators.DataRequired()])
-
-
-class CreateAnnouncementForm(Form):
-    announcement_descriptions = TextAreaField('Enter descriptions for announcement', [validators.Length(min=1, max=1000), validators.DataRequired()])
-    salutation = RadioField('Salutation', choices=[('Dr', 'Dr'), ('Mr', 'Mr'), ('Mrs', 'Mrs'), ('Miss', 'Miss'), ('Ms', 'Ms')], default='Dr')
-    tutor_full_name = SelectField('Full name of Tutor', [validators.DataRequired()], choices=[('', 'Select'), ('BL', 'Bobby Liu'), ('AW', 'Andy Wong')], default='')
-    created_datetime = DateTimeLocalField('Created date & time',  format="%Y-%m-%dT%H:%M", default=datetime.today, validators=[validators.DataRequired()])
-
-class CreateProgressreportForm(Form):
-    first_name = StringField('First Name', [validators.Length(min=1, max=150), validators.DataRequired()])
-    last_name = StringField('Last Name', [validators.Length(min=1, max=150), validators.DataRequired()])
-    comments = TextAreaField('Comments', [validators.Length(min=3, max=400), validators.DataRequired()])
-    overall_ratings = RadioField('Overall Ratings', choices=[(1, ''), (2, ''), (3, ''), (4, ''), (5, '')], render_kw={'class': 'star-icon'})
-
-
-class CreateContentForm(Form):
-    title = StringField("Title of the topic", [validators.Length(min=1, max=150), validators.DataRequired()])
-    content = TextAreaField('Enter descriptions for this topic', [validators.Length(min=1, max=1000), validators.DataRequired()])
-
-
-class CreateTeacherForm(Form):
-    salutation = RadioField('Salutation', choices=[('Dr', 'Dr'), ('Mr', 'Mr'), ('Mrs', 'Mrs'), ('Miss', 'Miss'), ('Ms', 'Ms')], default='Dr')
-    first_name = StringField('First Name', [validators.length(min=1, max=150), validators.DataRequired()])
-    last_name = StringField('Last Name', [validators.length(min=1, max=150), validators.DataRequired()])
-    gender = SelectField('Gender',
-                         choices=[('', 'Select'), ('F', 'Female'), ('M', 'Male')],
-                         default='')
-    email = EmailField('Email address', [validators.DataRequired(), validators.Email()])
-    date_joined = DateField('Date Joined',  [validators.DataRequired()])
-    address = StringField('Address')
-    subject = SelectMultipleField('Choose your Subject(s)', [validators.DataRequired()], choices=[('E', 'English'), ('M', 'Math'), ('S', 'Science'), ('C', 'Chinese')], default='')
-    # announcement_descriptions = RadioField('Membership', choices=[('F', 'Fellow'), ('S', 'Senior'), ('P', 'Professional')], default='F')
-    # announcement_descriptions = TextAreaField('Enter descriptions for announcement', [validators.Optional()])
-
-
+    level = SelectField('Level',
+                        choices=[('', 'Select'), ('1', 'Primary 1'), ('2', 'Primary 2'), ('3', 'Primary 3'),
+                                 ('4', 'Primary 4'), ('5', 'Primary 5'), ('6', 'Primary 6')],
+                        default='')
+    subject1 = SelectField('Subject',choices=[('','Select'),('1', 'English'), ('2','Math'), ('3','Science'), ('4','Chinese')])
+    subject2 = SelectField('Subject', choices=[('','Select'),('1', 'English'), ('2','Math'), ('3','Science'), ('4','Chinese'), ('N','Not Applicable')])
+    subject3 = SelectField('Subject', choices=[('','Select'),('1', 'English'), ('2','Math'), ('3','Science'), ('4','Chinese'),('','Not Applicable')])
+    subject4 = SelectField('Subject', choices=[('','Select'),('1', 'English'), ('2','Math'), ('3','Science'), ('4','Chinese'),('','Not Applicable')])
 
 class CreateQuizForm(FlaskForm):
     #studentid, teacherid, subjectid, quizid
